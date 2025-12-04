@@ -23,13 +23,20 @@ body {
     background-attachment: fixed; 
 }
 
+/* Bộ chứa cho cuộn ngang */
+.calendar-wrapper {
+    overflow-x: auto; 
+    width: 100%; 
+    margin: 0 auto;
+}
+
 table {
     border-collapse: collapse;
     table-layout: fixed;
     width: 1200px;
     max-width: 95%; 
     
-    /* 🔥 SỬA CHỮA CĂN GIỮA: Dùng margin auto để căn giữa khối table */
+    /* CĂN GIỮA: Dùng margin auto để căn giữa khối table */
     margin: 0 auto;
     
     background-color: rgba(255, 255, 255, 0.95); 
@@ -40,6 +47,7 @@ table {
 
 caption {
     font-size: 2.2em;
+    font-weight: 900;
     color: white; 
     padding: 20px 0;
     text-transform: uppercase;
@@ -91,13 +99,24 @@ td:not(:empty):hover {
     background-color: rgba(255, 249, 230, 0.8); 
 }
 
+.other-month {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+    color: #777 !important;
+}
+
+.past-day {
+    background-color: rgba(200, 200, 200, 0.25) !important;
+    color: #555 !important;
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
 .today {
     box-shadow: 0 0 0 4px #4CAF50 inset; 
     background-color: rgba(232, 245, 233, 0.9) !important; 
     font-weight: bold;
 }
 
-    font-weight: 900;
 /* --- 4. SỐ NGÀY (DAY-NUMBER) --- */
 .day-number {
     display: block;
@@ -138,8 +157,7 @@ td:not(:empty):hover {
 }
 
 /* --- 6. ĐỊNH DẠNG TỪNG LOẠI SỰ KIỆN --- */
-
-.note.ocg, .note.ae, .note.genesys, .note.tnt {
+.note.ocg, .note.ae, .note.genesys, .note.tnt, .note.nexus, .note.edison, .note.anhtournament {
     border: 1px solid transparent; 
 }
 
@@ -163,6 +181,31 @@ td:not(:empty):hover {
     font-weight: 600;
     border-left: 5px solid #1976d2;
 }
+
+/* 🔥 ĐỊNH DẠNG MỚI (TƯƠNG TỰ OCG/AE/GNS) */
+.note.nexus {
+    background-color: #e0f7fa; /* Màu nền nhạt (dựa trên màu #b3d9ff cũ) */
+    color: #00838f; /* Màu chữ đậm hơn */
+    font-weight: 600;
+    border-left: 5px solid #00acc1; /* Border xanh sáng */
+}
+
+.note.edison {
+    background-color: #fff3e0; /* Màu nền nhạt (dựa trên màu #ffd9b3 cũ) */
+    color: #e65100; /* Màu chữ đậm hơn */
+    font-weight: 600;
+    border-left: 5px solid #ff9800; /* Border cam */
+}
+
+.note.anhtournament {
+    background-color: #f3e5f5; /* Màu nền nhạt (dựa trên màu #f2b3ff cũ) */
+    color: #6a1b9a; /* Màu chữ đậm hơn */
+    font-weight: 600;
+    border-left: 5px solid #9c27b0; /* Border tím */
+}
+
+/* -------------------------------------- */
+
 
 .hof {
     border: 3px solid #ff0000; 
@@ -244,33 +287,29 @@ td:not(:empty):hover {
     background-color: white; 
 }
 
-/* --- PHẦN SỬA CHO ĐIỆN THOẠI (MEDIA QUERIES) --- */
-
-/* Thêm một bộ chứa mới để kích hoạt cuộn ngang */
-/* Cần bọc thẻ <table> bằng <div> có class="calendar-wrapper" trong HTML (xem hướng dẫn dưới) */
-.calendar-wrapper {
-    overflow-x: auto; /* Kích hoạt cuộn ngang */
-    width: 100%; /* Chiếm toàn bộ chiều ngang màn hình */
-    margin: 0 auto;
+/* Custom badge cho Anh Tournament */
+.note.anhtournament::after {
+    content: "Tour"; 
+    color: #9c27b0;
+    border: 1px solid #9c27b0;
+    background-color: white; 
 }
+
+/* --- PHẦN SỬA CHO ĐIỆN THOẠI (MEDIA QUERIES) --- */
 
 @media (max-width: 768px) {
     /* 1. CĂN CHỈNH BODY */
     body {
-        /* Bỏ căn giữa flexbox dọc cho body để tránh bị cắt nội dung */
         align-items: flex-start;
     }
 
     /* 2. CĂN CHỈNH BẢNG CHUNG */
     table {
-        /* Giữ lại độ rộng lớn của bảng để các ô không bị co lại */
         width: 1200px; 
-        max-width: none; /* Bỏ giới hạn max-width */
-        
-        /* Giảm độ đổ bóng và bo góc cho gọn hơn */
+        max-width: none; 
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
-        margin: 0; /* Bỏ margin auto của bảng gốc */
+        margin: 0; 
     }
 
     /* 3. TIÊU ĐỀ */
@@ -289,7 +328,7 @@ td:not(:empty):hover {
     td {
         height: 80px; 
         padding: 4px; 
-        font-size: 10px; /* Giảm cỡ chữ chung của ô ngày */
+        font-size: 10px; 
     }
 
     /* 5. SỐ NGÀY */
@@ -301,31 +340,38 @@ td:not(:empty):hover {
 
     /* 6. GHI CHÚ SỰ KIỆN */
     .note, .hof {
-        font-size: 0.65em; /* 🔥 Giảm cỡ chữ tối đa cho ghi chú */
+        font-size: 0.65em; 
         margin-top: 2px;
         padding: 1px 2px;
     }
     
     /* 7. LOGO ICON / BADGE */
     .note::after, .note::before, .hof::after, .hof::before {
-        font-size: 0.65em; /* Giảm kích thước chữ badge */
+        font-size: 0.65em; 
         padding: 1px 2px;
         margin-left: 2px;
     }
 }
-    
 </style>
 </head>
 <body>
-<table id="calendar">
-  <caption><h2>Tháng 12</h2></caption>
-  <thead>
-    <tr>
-      <th>CN</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>T7</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+<div class="calendar-wrapper">
+    <table id="calendar">
+      <caption><h2>Tháng 12</h2></caption>
+      <thead>
+    <tr>
+        <th>CN</th>
+        <th>T2</th>
+        <th>T3</th>
+        <th>T4</th>
+        <th>T5</th>
+        <th>T6</th>
+        <th>T7</th>
+    </tr>
+</thead>
+      <tbody></tbody>
+    </table>
+</div>
 
 <script>
 const tbody = document.querySelector("#calendar tbody");
@@ -342,8 +388,14 @@ for (let i = 0; i < 6; i++) {
   for (let j = 0; j < 7; j++) {
     const cell = document.createElement("td");
     
-    if (i === 0 && j < firstDay) { cell.innerHTML = ""; }
-    else if (date > daysInMonth) { cell.innerHTML = ""; }
+    if (i === 0 && j < firstDay) {
+    	cell.classList.add("other-month");
+    	cell.innerHTML = "";
+	} 
+	else if (date > daysInMonth) {
+    	cell.classList.add("other-month");
+    	cell.innerHTML = "";
+	}
     else {
       const daySpan = document.createElement("span");
       daySpan.classList.add("day-number");
@@ -351,6 +403,10 @@ for (let i = 0; i < 6; i++) {
       cell.appendChild(daySpan);
 
       if (date === today.getDate() && month === today.getMonth() && year === today.getFullYear()) cell.classList.add("today");
+      else if (new Date(year, month, date) < today) 
+	{
+    	cell.classList.add("past-day");
+	}
       if (j === 0 || j === 6) cell.classList.add("weekend"); 
 
       const dayOfWeekIndex = Math.ceil((date + firstDay - (j + 1)) / 7);
@@ -358,43 +414,41 @@ for (let i = 0; i < 6; i++) {
       // 1. Sự kiện Chủ Nhật (j=0)
       if (j === 0) {
           if (dayOfWeekIndex === 1) { 
-              addNote(cell, "Mahado Nexus 1103", "Mahado Nexus 1103", { classes: ["nexus"], backgroundColor: "#b3d9ff" });
-          } else if (dayOfWeekIndex === 2) { 
-              addNote(cell, "Mahado Edison", "Mahado Edison", { classes: ["edison"], backgroundColor: "#ffd9b3" });
-          } else if (date === 21) { 
-              addNote(cell, "Mahado Genesys", "Mahado Genesys", { classes: ["genesys"], backgroundColor: "#c2f0c2" });
+              // ĐÃ SỬA: Chỉ truyền classes, xóa backgroundColor
+              addNote(cell, "Mahado Nexus 1103", "Mahado Nexus 1103", { classes: ["nexus"] });
+          } else if (dayOfWeekIndex === 3) { 
+              // ĐÃ SỬA: Chỉ truyền classes, xóa backgroundColor
+              addNote(cell, "Mahado Edison", "Mahado Edison", { classes: ["edison"] });
+          } else if (date === 14) { 
+              addNote(cell, "Mahado Genesys", "Mahado Genesys", { classes: ["genesys"] });
           } else if (date === 28) { 
-              addNote(cell, "Anh Bình Tournament", "Anh Bình Tournament", { backgroundColor: "#f2b3ff" });
+              // ĐÃ SỬA: Chỉ truyền classes, thêm class anhtournament
+              addNote(cell, "Anh Bình Tournament", "Anh Bình Tournament", { classes: ["anhtournament"] });
           }
       }
 
       // 2. Sự kiện Thứ Ba (j=2)
-      if (j === 2 && (dayOfWeekIndex === 1 || dayOfWeekIndex === 2)) {
+      if (j === 2 && (dayOfWeekIndex === 0 || dayOfWeekIndex === 2 || dayOfWeekIndex === 3 || dayOfWeekIndex === 4)) {
           addNote(cell, "TNT OCG", "TNT OCG Event", { classes: ["tnt", "ocg"] });
       }
 
       // 3. Sự kiện Thứ Bảy (j=6)
-      if (j === 6 && (dayOfWeekIndex === 0 || dayOfWeekIndex === 1)) {
+      if (j === 6 && (dayOfWeekIndex === 0 || dayOfWeekIndex === 2)) {
           addNote(cell, "Mahado OCG Open", "Mahado OCG Open Event", { classes: ["ocg"] });
       }
 
-      // 4. Sự kiện Ngày Cụ Thể (Logic sự kiện đã được sửa lại)
+      // 4. Sự kiện Ngày Cụ Thể 
       
-      // Ngày 2: TNT Genesys (Giữ nguyên theo yêu cầu trước)
-      if (date === 2) { 
+      // Ngày 9: TNT Genesys 
+      if (date === 9) { 
           addNote(cell, "TNT Genesys", "TNT Genesys Event", { classes: ["genesys", "tnt"] });
       }
       
-      // Ngày 20: Mahado Open AE (Yêu cầu: ngày 20 là giải AE)
-      if (date === 20) { 
+      // Ngày 13: Mahado Open AE 
+      if (date === 13) { 
           addNote(cell, "Mahado Open AE", "Mahado Open AE", { classes: ["ae"] });
       }
 
-      // Ngày 23 và 30 - TNT OCG 
-      if (date === 23 || date === 30) { 
-          addNote(cell, "TNT OCG", "TNT OCG Event", { classes: ["tnt", "ocg"] });
-      }
-      
       // Ngày 27 - Mahado HoF Kickoff
       if (date === 27) { 
           addNote(cell, "Mahado HoF Kickoff", "Mahado HoF Kickoff", { classes: ["hof"], isSpecial: true });
@@ -408,7 +462,7 @@ for (let i = 0; i < 6; i++) {
   if (date>daysInMonth) break;
 }
 
-// Hàm hỗ trợ đã được cập nhật để bọc chữ trong note-text
+// Hàm hỗ trợ đã được cập nhật để loại bỏ xử lý backgroundColor
 function addNote(cell, text, title, options = {}) {
     let note = document.createElement("span");
     
@@ -429,9 +483,8 @@ function addNote(cell, text, title, options = {}) {
     
     note.appendChild(textSpan); 
 
-    if (options.backgroundColor) {
-        note.style.backgroundColor = options.backgroundColor;
-    }
+    // ĐÃ XÓA: if (options.backgroundColor) { ... }
+    
     cell.appendChild(note);
 }
 </script>

@@ -246,67 +246,73 @@ td:not(:empty):hover {
 
 /* --- PHẦN SỬA CHO ĐIỆN THOẠI (MEDIA QUERIES) --- */
 
+/* Thêm một bộ chứa mới để kích hoạt cuộn ngang */
+/* Cần bọc thẻ <table> bằng <div> có class="calendar-wrapper" trong HTML (xem hướng dẫn dưới) */
+.calendar-wrapper {
+    overflow-x: auto; /* Kích hoạt cuộn ngang */
+    width: 100%; /* Chiếm toàn bộ chiều ngang màn hình */
+    margin: 0 auto;
+}
+
 @media (max-width: 768px) {
-    /* 1. CĂN CHỈNH BẢNG CHUNG */
+    /* 1. CĂN CHỈNH BODY */
+    body {
+        /* Bỏ căn giữa flexbox dọc cho body để tránh bị cắt nội dung */
+        align-items: flex-start;
+    }
+
+    /* 2. CĂN CHỈNH BẢNG CHUNG */
     table {
-        /* Cho phép bảng kéo dãn hết chiều ngang */
-        width: 100%;
-        max-width: 100%;
+        /* Giữ lại độ rộng lớn của bảng để các ô không bị co lại */
+        width: 1200px; 
+        max-width: none; /* Bỏ giới hạn max-width */
+        
         /* Giảm độ đổ bóng và bo góc cho gọn hơn */
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
+        margin: 0; /* Bỏ margin auto của bảng gốc */
     }
 
-    /* 2. TIÊU ĐỀ */
+    /* 3. TIÊU ĐỀ */
     caption {
-        font-size: 1.6em; /* Giảm kích thước chữ Tiêu đề */
+        font-size: 1.6em; 
         padding: 15px 0;
         letter-spacing: 1px;
     }
     
-    /* 3. HEADER VÀ Ô NGÀY */
+    /* 4. HEADER VÀ Ô NGÀY */
     th {
-        height: 40px; /* Giảm chiều cao header */
-        font-size: 0.8em; /* Giảm cỡ chữ tên ngày */
+        height: 40px; 
+        font-size: 0.8em; 
     }
 
     td {
-        height: 80px; /* Giảm chiều cao ô ngày để hiển thị nhiều hơn */
+        height: 80px; 
         padding: 4px; 
-        font-size: 12px;
+        font-size: 10px; /* Giảm cỡ chữ chung của ô ngày */
     }
 
-    /* 4. SỐ NGÀY */
+    /* 5. SỐ NGÀY */
     .day-number {
-        font-size: 1.2em; /* Giảm kích thước số ngày */
+        font-size: 1.2em; 
         margin-bottom: 2px;
         padding-right: 3px;
     }
 
-    /* 5. GHI CHÚ SỰ KIỆN */
+    /* 6. GHI CHÚ SỰ KIỆN */
     .note, .hof {
-        font-size: 0.7em; /* Giảm cỡ chữ ghi chú */
+        font-size: 0.65em; /* 🔥 Giảm cỡ chữ tối đa cho ghi chú */
         margin-top: 2px;
-        padding: 2px 3px;
+        padding: 1px 2px;
     }
     
-    /* Căn chỉnh lại icon và chữ cho nhỏ */
-    .note-text {
-        margin-right: 3px;
-    }
-
-    /* 6. LOGO ICON / BADGE */
+    /* 7. LOGO ICON / BADGE */
     .note::after, .note::before, .hof::after, .hof::before {
-        font-size: 0.7em; /* Giảm kích thước chữ badge */
-        padding: 1px 3px;
-        margin-left: 3px;
+        font-size: 0.65em; /* Giảm kích thước chữ badge */
+        padding: 1px 2px;
+        margin-left: 2px;
     }
-    
-    /* Icon TV */
-    .note.tnt::before { 
-        margin-right: 2px;
-    }
-}    
+}
     
 </style>
 </head>

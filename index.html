@@ -8,6 +8,7 @@
 /* --- 1. THIẾT KẾ CHUNG VÀ BỐ CỤC --- */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Giữ lại flexbox để căn giữa body dọc */
     display: flex;
     justify-content: center;
     align-items: center; 
@@ -27,6 +28,10 @@ table {
     table-layout: fixed;
     width: 1200px;
     max-width: 95%; 
+    
+    /* 🔥 SỬA CHỮA CĂN GIỮA: Dùng margin auto để căn giữa khối table */
+    margin: 0 auto;
+    
     background-color: rgba(255, 255, 255, 0.95); 
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
     border-radius: 12px; 
@@ -183,7 +188,7 @@ td:not(:empty):hover {
 }
 
 
-/* --- 7. LOGO ICON / BADGE (ĐÃ SỬA MÀU NỀN TRẮNG) --- */
+/* --- 7. LOGO ICON / BADGE --- */
 .note::after, .note::before, .hof::after, .hof::before {
     flex-shrink: 0; 
     align-self: flex-start;
@@ -192,7 +197,7 @@ td:not(:empty):hover {
     padding: 1px 4px;
     border-radius: 4px;
     font-weight: 700;
-    background-color: white; /* <--- ĐÃ THÊM MÀU NỀN TRẮNG */
+    background-color: white; 
 }
 
 .note.ocg::after {
@@ -220,11 +225,11 @@ td:not(:empty):hover {
     padding: 0;
     margin-right: 4px;
     border: none;
-    background-color: transparent; /* Icon TV không cần nền trắng */
+    background-color: transparent; 
     order: -1; 
 }
 
-/* Custom badges cho Nexus và Edison (Giữ nguyên, vốn đã có nền trắng) */
+/* Custom badges cho Nexus và Edison */
 .note.nexus::after {
     content: "1103"; 
     color: #1976d2;
@@ -235,7 +240,7 @@ td:not(:empty):hover {
 .note.edison::after {
     content: "E"; 
     color: #ff9800; 
-    border: 1fpx solid #ff9800;
+    border: 1px solid #ff9800;
     background-color: white; 
 }
 </style>

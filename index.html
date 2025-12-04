@@ -4,489 +4,364 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lịch Sự Kiện Tháng 12 Hoàn Chỉnh</title>
+
+<!-- BOOTSTRAP CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
-/* --- 1. THIẾT KẾ CHUNG VÀ BỐ CỤC --- */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Giữ lại flexbox để căn giữa body dọc */
     display: flex;
     justify-content: center;
-    align-items: center; 
-    min-height: 100vh; 
+    align-items: flex-start;
+    min-height: 100vh;
     margin: 0;
-    padding: 30px 20px;
-    
-    background-image: url('https://i.postimg.cc/MpfwkmQj/TNT_24.png'); 
-    
+    padding: 20px;
+    background-image: url('https://i.postimg.cc/MpfwkmQj/TNT_24.png');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed; 
+    background-attachment: fixed;
 }
 
-/* Bộ chứa cho cuộn ngang */
 .calendar-wrapper {
-    overflow-x: auto; 
-    width: 100%; 
-    margin: 0 auto;
+    width: 100%;
 }
 
 table {
     border-collapse: collapse;
     table-layout: fixed;
     width: 1200px;
-    max-width: 95%; 
-    
-    /* CĂN GIỮA: Dùng margin auto để căn giữa khối table */
-    margin: 0 auto;
-    
-    background-color: rgba(255, 255, 255, 0.95); 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
-    border-radius: 12px; 
-    overflow: hidden; 
+    max-width: 95%;
+    margin: auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    overflow: hidden;
 }
 
 caption {
-    font-size: 2.2em;
+    font-size: 2em;
     font-weight: 900;
-    color: white; 
+    color: white;
     padding: 20px 0;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7); 
+    text-shadow: 2px 2px 5px black;
 }
 
-/* --- 2. HEADER CỦA LỊCH (CN - T7) --- */
 th {
-    background-color: #3f51b5; 
+    background-color: #3f51b5;
     color: white;
     height: 50px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border: none;
 }
-
-th:first-child { 
+th:first-child {
     background-color: #f44336;
 }
 
-/* --- 3. Ô NGÀY VÀ HIỆU ỨNG (TD) --- */
 td {
-    border: 1px solid #e0e0e0; 
+    border: 1px solid #e0e0e0;
     text-align: center;
     vertical-align: top;
-    padding: 8px; 
-    height: 130px; 
-    overflow: hidden;
-    word-wrap: break-word;
+    padding: 6px;
+    height: 130px;
+    background-color: rgba(255,255,255,0.6);
+    transition: 0.3s;
     position: relative;
-    background-color: rgba(255, 255, 255, 0.6); 
-    font-size: 14px;
-    transition: background-color 0.3s ease;
 }
 
-td:empty {
-    background-color: #f5f5f5; 
-}
-
-td:not(:empty):hover {
-    background-color: rgba(255, 253, 231, 0.9);
-    cursor: default;
-}
-
-.weekend {
-    background-color: rgba(255, 249, 230, 0.8); 
-}
+.weekend { background-color: rgba(255,249,230,0.8); }
 
 .other-month {
-    background-color: rgba(0, 0, 0, 0.15) !important;
-    color: #777 !important;
+    background-color: rgba(0,0,0,0.15) !important;
+    color: #666;
 }
 
 .past-day {
-    background-color: rgba(200, 200, 200, 0.25) !important;
-    color: #555 !important;
+    color: #777 !important;
     text-decoration: line-through;
     opacity: 0.6;
 }
 
 .today {
-    box-shadow: 0 0 0 4px #4CAF50 inset; 
-    background-color: rgba(232, 245, 233, 0.9) !important; 
+    background-color: rgba(232,245,233,0.95) !important;
+    box-shadow: inset 0 0 0 4px #4CAF50;
     font-weight: bold;
 }
 
-/* --- 4. SỐ NGÀY (DAY-NUMBER) --- */
 .day-number {
     display: block;
-    font-weight: 900; 
+    font-weight: 900;
+    font-size: 1.7em;
     margin-bottom: 5px;
-    font-size: 1.8em; 
-    color: #3f51b5; 
     text-align: right;
     padding-right: 5px;
+    color: #3f51b5;
 }
 
-/* --- 5. GHI CHÚ SỰ KIỆN (NOTE) VÀ HIỆU ỨNG --- */
+/* NOTE STYLE */
 .note, .hof {
-    display: flex; 
-    align-items: flex-start;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
-
-    font-size: 0.95em;
+    padding: 4px 6px;
+    border-radius: 6px;
     margin-top: 4px;
-    padding: 3px 5px;
-    border-radius: 6px; 
+    font-size: 0.9em;
     cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: normal; 
+    transition: 0.15s;
+    gap: 6px;               /* khoảng cách giữa text và badge */
+    overflow: hidden;       /* tránh badge tràn ra khỏi ô */
+    min-width: 0;           /* cho ellipsis hoạt động bên trong flex */
 }
 
-.note-text {
-    flex-grow: 1; 
-    text-align: left;
-    margin-right: 5px; 
-    word-break: break-word; 
+/* === HoF pulse (khôi phục / sửa) === */
+.hof {
+  border: 3px solid #ff0000;
+  color: #cc0000;
+  font-weight: bolder;
+  background-color: #fff0f0;
+  font-size: 1em;
+  text-align: center;
+  padding: 6px;
+  border-radius: 6px;
+  display: inline-block;
+  animation: hof-pulse 1.6s infinite;
+  box-sizing: border-box;
 }
 
-.note:hover, .hof:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.15);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+/* keyframes riêng cho hof để tránh trùng tên */
+@keyframes hof-pulse {
+  0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,0,0,0.35); }
+  50%  { transform: scale(1.02); box-shadow: 0 6px 18px rgba(255,0,0,0.15); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,0,0,0); }
 }
 
-/* --- 6. ĐỊNH DẠNG TỪNG LOẠI SỰ KIỆN --- */
-.note.ocg, .note.ae, .note.genesys, .note.tnt, .note.nexus, .note.edison, .note.anhtournament {
-    border: 1px solid transparent; 
+.note:hover { transform: translateY(-2px); filter: brightness(1.15); }
+
+.note-text { 
+  flex-grow: 1; 
+  text-align: left; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;	
 }
 
-.note.ocg {
-    background-color: #ffcdd2; 
-    color: #c62828;
-    font-weight: 600;
-    border-left: 5px solid #c62828; 
+.note.ocg { background:#ffcdd2; color:#b71c1c; border-left:5px solid #b71c1c; }
+.note.ae { background:#c8e6c9; color:#2e7d32; border-left:5px solid #2e7d32; }
+.note.genesys { background:#bbdefb; color:#1976d2; border-left:5px solid #1976d2; }
+.note.tnt {
+  /* base để note.tnt vẫn hợp nhất layout */
+  color: #5a5a5a;
+  background: rgba(255,255,255,0.85);
+  border-left: 5px solid rgba(0,0,0,0.05);
 }
-
-.note.ae {
-    background-color: #c8e6c9; 
-    color: #2e7d32;
-    font-weight: 600;
-    border-left: 5px solid #2e7d32;
+.note.tnt.ocg {
+  background: #ffcdd2;
+  color: #b71c1c;
+  border-left: 5px solid #b71c1c;
 }
-
-.note.genesys:not(.hof) {
-    background-color: #bbdefb; 
-    color: #1976d2;
-    font-weight: 600;
-    border-left: 5px solid #1976d2;
+.note.tnt.genesys {
+  background: #bbdefb;
+  color: #1976d2;
+  border-left: 5px solid #1976d2;
 }
-
-/* 🔥 ĐỊNH DẠNG MỚI (TƯƠNG TỰ OCG/AE/GNS) */
-.note.nexus {
-    background-color: #e0f7fa; /* Màu nền nhạt (dựa trên màu #b3d9ff cũ) */
-    color: #00838f; /* Màu chữ đậm hơn */
-    font-weight: 600;
-    border-left: 5px solid #00acc1; /* Border xanh sáng */
-}
-
-.note.edison {
-    background-color: #fff3e0; /* Màu nền nhạt (dựa trên màu #ffd9b3 cũ) */
-    color: #e65100; /* Màu chữ đậm hơn */
-    font-weight: 600;
-    border-left: 5px solid #ff9800; /* Border cam */
-}
-
-.note.anhtournament {
-    background-color: #f3e5f5; /* Màu nền nhạt (dựa trên màu #f2b3ff cũ) */
-    color: #6a1b9a; /* Màu chữ đậm hơn */
-    font-weight: 600;
-    border-left: 5px solid #9c27b0; /* Border tím */
-}
-
-/* -------------------------------------- */
-
+.note.nexus { background:#e0f7fa; color:#00838f; border-left:5px solid #00acc1; }
+.note.edison { background:#fff3e0; color:#e65100; border-left:5px solid #ff9800; }
+.note.anhtournament { background:#f3e5f5; color:#6a1b9a; border-left:5px solid #9c27b0; }
 
 .hof {
-    border: 3px solid #ff0000; 
-    color: #cc0000; 
-    font-weight: bolder;
-    background-color: #fff0f0; 
-    font-size: 1em;
-    text-align: center; 
-    animation: pulse 1.5s infinite; 
+    border: 3px solid red;
+    color: red;
+    font-weight: bold;
+    background: #ffe5e5;
+    text-align: center;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); }
-    70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
-    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
-}
-
-.note.tnt:not(.genesys) {
-    background-color: #fff9c4; 
-    color: #f9a825;
-    font-weight: 600;
-    border-left: 5px solid #f9a825;
-}
-
-
-/* --- 7. LOGO ICON / BADGE --- */
-.note::after, .note::before, .hof::after, .hof::before {
-    flex-shrink: 0; 
-    align-self: flex-start;
-    font-size: 0.9em;
-    margin-left: 5px;
+.note::after, .note::before {
     padding: 1px 4px;
+    background: white;
     border-radius: 4px;
+    font-size: 0.8em;
+    margin-left: 5px;
     font-weight: 700;
-    background-color: white; 
 }
 
-.note.ocg::after {
-    content: "OCG";
-    color: #c62828;
-    border: 1px solid #c62828;
+/* badge/ico kiểu inline-block, không absolute */
+.note::after, .note::before, .hof::after, .hof::before {
+  display: inline-block;
+  vertical-align: middle;
+  white-space: nowrap;
+  padding: 0 6px;
+  margin-left: 4px;
+  box-sizing: border-box;
+  max-width: 100%;       /* prevent overflow */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.note.ae::after {
-    content: "AE";
-    color: #2e7d32;
-    border: 1px solid #2e7d32;
+/* BADGES */
+.note.ocg::after { content:"OCG"; border:1px solid #b71c1c; color:#b71c1c; }
+.note.ae::after { content:"AE"; border:1px solid #2e7d32; color:#2e7d32; }
+.note.genesys::after { content:"GNS"; border:1px solid #1976d2; color:#1976d2; }
+.note.tnt::before { content:"📺"; margin-right:4px; background:none; }
+.note.nexus::after { content:"1103"; border:1px solid #00acc1; color:#00acc1; }
+.note.edison::after { content:"E"; border:1px solid #ff9800; color:#ff9800; }
+.note.anhtournament::after { content:"Tour"; border:1px solid #9c27b0; color:#9c27b0; }
+
+/* Badge / icon không ellipsis */
+.note::after,
+.note::before,
+.hof::after,
+.hof::before {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: visible !important;   /* <-- Quan trọng */
+    text-overflow: clip !important; /* <-- Quan trọng */
+    max-width: none !important;     /* <-- Quan trọng */
+    margin-left: 4px;
+    padding: 0 6px;
 }
 
-.note.genesys::after {
-    content: "GNS";
-    color: #1976d2;
-    border: 1px solid #1976d2;
+@media (max-width:768px) {
+    td { height: 95px; font-size: 11px; }
+    .day-number { font-size: 1.3em; }
 }
 
-.note.tnt::before { 
-    content: "📺"; 
-    flex-shrink: 0;
-    align-self: flex-start;
-    padding: 0;
-    margin-right: 4px;
-    border: none;
-    background-color: transparent; 
-    order: -1; 
-}
-
-/* Custom badges cho Nexus và Edison */
-.note.nexus::after {
-    content: "1103"; 
-    color: #1976d2;
-    border: 1px solid #1976d2;
-    background-color: white; 
-}
-
-.note.edison::after {
-    content: "E"; 
-    color: #ff9800; 
-    border: 1px solid #ff9800;
-    background-color: white; 
-}
-
-/* Custom badge cho Anh Tournament */
-.note.anhtournament::after {
-    content: "Tour"; 
-    color: #9c27b0;
-    border: 1px solid #9c27b0;
-    background-color: white; 
-}
-
-/* --- PHẦN SỬA CHO ĐIỆN THOẠI (MEDIA QUERIES) --- */
-
-@media (max-width: 768px) {
-    /* 1. CĂN CHỈNH BODY */
-    body {
-        align-items: flex-start;
-    }
-
-    /* 2. CĂN CHỈNH BẢNG CHUNG */
-    table {
-        width: 1200px; 
-        max-width: none; 
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        margin: 0; 
-    }
-
-    /* 3. TIÊU ĐỀ */
-    caption {
-        font-size: 1.6em; 
-        padding: 15px 0;
-        letter-spacing: 1px;
-    }
-    
-    /* 4. HEADER VÀ Ô NGÀY */
-    th {
-        height: 40px; 
-        font-size: 0.8em; 
-    }
-
-    td {
-        height: 80px; 
-        padding: 4px; 
-        font-size: 10px; 
-    }
-
-    /* 5. SỐ NGÀY */
-    .day-number {
-        font-size: 1.2em; 
-        margin-bottom: 2px;
-        padding-right: 3px;
-    }
-
-    /* 6. GHI CHÚ SỰ KIỆN */
-    .note, .hof {
-        font-size: 0.65em; 
-        margin-top: 2px;
-        padding: 1px 2px;
-    }
-    
-    /* 7. LOGO ICON / BADGE */
-    .note::after, .note::before, .hof::after, .hof::before {
-        font-size: 0.65em; 
-        padding: 1px 2px;
-        margin-left: 2px;
-    }
+/* khi màn hình nhỏ, giảm padding badge để không đẩy layout */
+@media (max-width: 480px) {
+  .note::after, .note::before, .hof::after, .hof::before {
+    padding: 0 4px;
+    font-size: 0.75em;
+  }
+  .note-text { white-space: nowrap; }
 }
 </style>
 </head>
+
 <body>
-<div class="calendar-wrapper">
-    <table id="calendar">
-      <caption><h2>Tháng 12</h2></caption>
-      <thead>
-    <tr>
-        <th>CN</th>
-        <th>T2</th>
-        <th>T3</th>
-        <th>T4</th>
-        <th>T5</th>
-        <th>T6</th>
-        <th>T7</th>
-    </tr>
-</thead>
-      <tbody></tbody>
-    </table>
+
+<div class="container-fluid">
+  <div class="calendar-wrapper">
+    <div class="table-responsive">
+      <table id="calendar" class="table table-bordered text-center">
+        <caption>Tháng 12</caption>
+        <thead>
+          <tr>
+            <th>CN</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>T7</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
 </div>
+
+<!-- BOOTSTRAP JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 const tbody = document.querySelector("#calendar tbody");
 const today = new Date();
-const year = today.getFullYear(); 
-const month = 11; 
-const firstDay = new Date(year, month, 1).getDay(); 
-const daysInMonth = new Date(year, month + 1, 0).getDate();
+const year = today.getFullYear();
+const month = 11; // December (0-based)
+const firstDay = new Date(year, month, 1).getDay();
+const daysInMonth = new Date(year, month+1, 0).getDate();
 
 let date = 1;
 
 for (let i = 0; i < 6; i++) {
   const row = document.createElement("tr");
+
   for (let j = 0; j < 7; j++) {
     const cell = document.createElement("td");
-    
+
     if (i === 0 && j < firstDay) {
-    	cell.classList.add("other-month");
-    	cell.innerHTML = "";
-	} 
-	else if (date > daysInMonth) {
-    	cell.classList.add("other-month");
-    	cell.innerHTML = "";
-	}
+        cell.classList.add("other-month");
+        cell.innerHTML = ""; // show as shaded cells for days before month
+    } 
+    else if (date > daysInMonth) {
+        cell.classList.add("other-month");
+        cell.innerHTML = "";
+    }
     else {
       const daySpan = document.createElement("span");
       daySpan.classList.add("day-number");
       daySpan.textContent = date;
       cell.appendChild(daySpan);
 
-      if (date === today.getDate() && month === today.getMonth() && year === today.getFullYear()) cell.classList.add("today");
-      else if (new Date(year, month, date) < today) 
-	{
-    	cell.classList.add("past-day");
-	}
-      if (j === 0 || j === 6) cell.classList.add("weekend"); 
+      const cellDate = new Date(year, month, date);
 
-      const dayOfWeekIndex = Math.ceil((date + firstDay - (j + 1)) / 7);
+      if (cellDate.toDateString() === today.toDateString()) cell.classList.add("today");
+      else if (cellDate < today) cell.classList.add("past-day");
 
-      // 1. Sự kiện Chủ Nhật (j=0)
+      if (j === 0 || j === 6) cell.classList.add("weekend");
+
+      const weekIndex = Math.ceil((date + firstDay) / 7);
+
+      // Sunday events
       if (j === 0) {
-          if (dayOfWeekIndex === 1) { 
-              // ĐÃ SỬA: Chỉ truyền classes, xóa backgroundColor
-              addNote(cell, "Mahado Nexus 1103", "Mahado Nexus 1103", { classes: ["nexus"] });
-          } else if (dayOfWeekIndex === 3) { 
-              // ĐÃ SỬA: Chỉ truyền classes, xóa backgroundColor
-              addNote(cell, "Mahado Edison", "Mahado Edison", { classes: ["edison"] });
-          } else if (date === 14) { 
-              addNote(cell, "Mahado Genesys", "Mahado Genesys", { classes: ["genesys"] });
-          } else if (date === 28) { 
-              // ĐÃ SỬA: Chỉ truyền classes, thêm class anhtournament
-              addNote(cell, "Anh Bình Tournament", "Anh Bình Tournament", { classes: ["anhtournament"] });
-          }
+          if (weekIndex === 2) addNote(cell, "Mahado Nexus 1103", "nexus");
+          if (weekIndex === 4) addNote(cell, "Mahado Edison", "edison");
+          if (date === 14) addNote(cell, "Mahado Genesys", "genesys");
+          if (date === 28) addNote(cell, "Anh Bình Tournament", "anhtournament");
       }
 
-      // 2. Sự kiện Thứ Ba (j=2)
-      if (j === 2 && (dayOfWeekIndex === 0 || dayOfWeekIndex === 2 || dayOfWeekIndex === 3 || dayOfWeekIndex === 4)) {
-          addNote(cell, "TNT OCG", "TNT OCG Event", { classes: ["tnt", "ocg"] });
+      // Tuesday events (T3)
+      if (j === 2 && [1,3,4,5].includes(weekIndex)) {
+          addNote(cell, "TNT OCG", "tnt", "ocg");
       }
 
-      // 3. Sự kiện Thứ Bảy (j=6)
-      if (j === 6 && (dayOfWeekIndex === 0 || dayOfWeekIndex === 2)) {
-          addNote(cell, "Mahado OCG Open", "Mahado OCG Open Event", { classes: ["ocg"] });
+      // Saturday events (T7)
+      if (j === 6 && [1,3].includes(weekIndex)) {
+          addNote(cell, "Mahado OCG Open", "ocg");
       }
 
-      // 4. Sự kiện Ngày Cụ Thể 
-      
-      // Ngày 9: TNT Genesys 
-      if (date === 9) { 
-          addNote(cell, "TNT Genesys", "TNT Genesys Event", { classes: ["genesys", "tnt"] });
-      }
-      
-      // Ngày 13: Mahado Open AE 
-      if (date === 13) { 
-          addNote(cell, "Mahado Open AE", "Mahado Open AE", { classes: ["ae"] });
-      }
-
-      // Ngày 27 - Mahado HoF Kickoff
-      if (date === 27) { 
-          addNote(cell, "Mahado HoF Kickoff", "Mahado HoF Kickoff", { classes: ["hof"], isSpecial: true });
-      }
+      // Specific dates
+      if (date === 9) addNote(cell, "TNT Genesys", "tnt", "genesys");
+      if (date === 13) addNote(cell, "Mahado Open AE", "ae");
+      if (date === 27) addNote(cell, "Mahado HoF Kickoff", "hof", null, true);
 
       date++;
     }
+
     row.appendChild(cell);
   }
+
   tbody.appendChild(row);
-  if (date>daysInMonth) break;
+  if (date > daysInMonth) break;
 }
 
-// Hàm hỗ trợ đã được cập nhật để loại bỏ xử lý backgroundColor
-function addNote(cell, text, title, options = {}) {
+// addNote now accepts variable classes safely
+function addNote(cell, text, cls=null, cls2=null, special=false) {
     let note = document.createElement("span");
-    
-    let textSpan = document.createElement("span");
-    textSpan.classList.add("note-text");
-    textSpan.textContent = text;
 
-    if (options.isSpecial && options.classes) {
-        note.classList.add(options.classes[0]); 
+    if (special && cls) {
+        note.classList.add(cls); // e.g. hof (special styling already)
     } else {
         note.classList.add("note");
-        if (options.classes) {
-            options.classes.forEach(cls => note.classList.add(cls));
+        if (cls) {
+            // if cls contains spaces (accidental), split them safely
+            cls.toString().split(/\s+/).filter(Boolean).forEach(c => note.classList.add(c));
+        }
+        if (cls2) {
+            cls2.toString().split(/\s+/).filter(Boolean).forEach(c => note.classList.add(c));
         }
     }
 
-    note.title = title;
-    
-    note.appendChild(textSpan); 
+    let t = document.createElement("span");
+    t.classList.add("note-text");
+    t.textContent = text;
+    note.appendChild(t);
 
-    // ĐÃ XÓA: if (options.backgroundColor) { ... }
-    
+    // bootstrap tooltip
+    note.setAttribute("data-bs-toggle", "tooltip");
+    note.setAttribute("title", text);
+
     cell.appendChild(note);
 }
+
+// initialize bootstrap tooltips
+const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
 </script>
+
 </body>
 </html>

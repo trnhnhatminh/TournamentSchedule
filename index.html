@@ -40,7 +40,6 @@ table {
 
 caption {
     font-size: 2.2em;
-    font-weight: 900;
     color: white; 
     padding: 20px 0;
     text-transform: uppercase;
@@ -98,6 +97,7 @@ td:not(:empty):hover {
     font-weight: bold;
 }
 
+    font-weight: 900;
 /* --- 4. SỐ NGÀY (DAY-NUMBER) --- */
 .day-number {
     display: block;
@@ -243,6 +243,71 @@ td:not(:empty):hover {
     border: 1px solid #ff9800;
     background-color: white; 
 }
+
+/* --- PHẦN SỬA CHO ĐIỆN THOẠI (MEDIA QUERIES) --- */
+
+@media (max-width: 768px) {
+    /* 1. CĂN CHỈNH BẢNG CHUNG */
+    table {
+        /* Cho phép bảng kéo dãn hết chiều ngang */
+        width: 100%;
+        max-width: 100%;
+        /* Giảm độ đổ bóng và bo góc cho gọn hơn */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    /* 2. TIÊU ĐỀ */
+    caption {
+        font-size: 1.6em; /* Giảm kích thước chữ Tiêu đề */
+        padding: 15px 0;
+        letter-spacing: 1px;
+    }
+    
+    /* 3. HEADER VÀ Ô NGÀY */
+    th {
+        height: 40px; /* Giảm chiều cao header */
+        font-size: 0.8em; /* Giảm cỡ chữ tên ngày */
+    }
+
+    td {
+        height: 80px; /* Giảm chiều cao ô ngày để hiển thị nhiều hơn */
+        padding: 4px; 
+        font-size: 12px;
+    }
+
+    /* 4. SỐ NGÀY */
+    .day-number {
+        font-size: 1.2em; /* Giảm kích thước số ngày */
+        margin-bottom: 2px;
+        padding-right: 3px;
+    }
+
+    /* 5. GHI CHÚ SỰ KIỆN */
+    .note, .hof {
+        font-size: 0.7em; /* Giảm cỡ chữ ghi chú */
+        margin-top: 2px;
+        padding: 2px 3px;
+    }
+    
+    /* Căn chỉnh lại icon và chữ cho nhỏ */
+    .note-text {
+        margin-right: 3px;
+    }
+
+    /* 6. LOGO ICON / BADGE */
+    .note::after, .note::before, .hof::after, .hof::before {
+        font-size: 0.7em; /* Giảm kích thước chữ badge */
+        padding: 1px 3px;
+        margin-left: 3px;
+    }
+    
+    /* Icon TV */
+    .note.tnt::before { 
+        margin-right: 2px;
+    }
+}    
+    
 </style>
 </head>
 <body>

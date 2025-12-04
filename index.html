@@ -3,365 +3,322 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lịch Sự Kiện Tháng 12 Hoàn Chỉnh</title>
-
-<!-- BOOTSTRAP CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<title>Lịch Tháng 12 - Tối ưu hóa</title>
 
 <style>
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: url('https://i.postimg.cc/MpfwkmQj/TNT_24.png') center/cover fixed;
     padding: 20px;
-    background-image: url('https://i.postimg.cc/MpfwkmQj/TNT_24.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    margin: 0;
 }
 
-.calendar-wrapper {
-    width: 100%;
-}
-
-table {
-    border-collapse: collapse;
-    table-layout: fixed;
-    width: 1200px;
-    max-width: 95%;
-    margin: auto;
-    background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-caption {
-    font-size: 2em;
-    font-weight: 900;
-    color: white;
-    padding: 20px 0;
-    text-shadow: 2px 2px 5px black;
-}
-
-th {
-    background-color: #3f51b5;
-    color: white;
-    height: 50px;
-}
-th:first-child {
-    background-color: #f44336;
-}
-
-td {
-    border: 1px solid #e0e0e0;
+.header-row {
+    display: grid;
+    grid-template-columns: repeat(7,1fr);
+    max-width: 1200px;
+    margin: 0 auto 6px;
     text-align: center;
-    vertical-align: top;
-    padding: 6px;
-    height: 130px;
-    background-color: rgba(255,255,255,0.6);
-    transition: 0.3s;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.header-cell {
+    padding: 10px 0;
+    background: rgba(0,0,0,0.5);
+    border-radius: 6px;
+}
+
+/* Header Chủ Nhật */
+.sun {
+    background-color: rgba(255, 59, 48, 0.5); 
+    color: white;
+    padding: 10px 0;
+    border-radius: 6px;
+}
+
+/* Header Thứ Bảy */
+.sat {
+    background-color: rgba(255, 204, 0, 0.5);
+    color: black;
+    padding: 10px 0;
+    border-radius: 6px;
+}
+
+/* Calendar Grid */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.day {
+    background: rgba(255,255,255,0.75);
+    border-radius: 8px;
+    padding: 8px;
+    min-height: 110px;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
-.weekend { background-color: rgba(255,249,230,0.8); }
+.other { background: rgba(0,0,0,0.15); color:#777; }
 
-.other-month {
-    background-color: rgba(0,0,0,0.15) !important;
-    color: #666;
-}
-
-.past-day {
-    color: #777 !important;
+.past {
+    opacity: 0.55;
     text-decoration: line-through;
-    opacity: 0.6;
+    text-decoration-thickness: 2px;
+    text-decoration-color: rgba(0,0,0,0.45);
 }
 
 .today {
-    background-color: rgba(232,245,233,0.95) !important;
-    box-shadow: inset 0 0 0 4px #4CAF50;
-    font-weight: bold;
+    border: 3px solid #4caf50;
+    background: rgba(200,255,200,0.6);
 }
 
 .day-number {
-    display: block;
-    font-weight: 900;
-    font-size: 1.7em;
-    margin-bottom: 5px;
-    text-align: right;
-    padding-right: 5px;
-    color: #3f51b5;
+    font-size: 1.4em;
+    font-weight: 800;
+    margin-bottom: 6px;
 }
 
-/* NOTE STYLE */
-.note, .hof {
+/* Tối ưu hóa: Làm nổi bật ngày cuối tuần (Thứ 7 & Chủ Nhật) */
+.day:nth-child(7n) .day-number { /* Chủ Nhật */
+    color: #c62828;
+}
+.day:nth-child(7n-1) .day-number { /* Thứ Bảy */
+    color: #fbc02d;
+}
+
+/* Note styling */
+.note {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     padding: 4px 6px;
-    border-radius: 6px;
     margin-top: 4px;
-    font-size: 0.9em;
+    border-radius: 6px;
+    font-size: 0.85em;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.15s;
-    gap: 6px;               /* khoảng cách giữa text và badge */
-    overflow: hidden;       /* tránh badge tràn ra khỏi ô */
-    min-width: 0;           /* cho ellipsis hoạt động bên trong flex */
+    transition: 0.2s;
+}
+.note:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.18);
 }
 
-/* === HoF pulse (khôi phục / sửa) === */
-.hof {
-  border: 3px solid #ff0000;
-  color: #cc0000;
-  font-weight: bolder;
-  background-color: #fff0f0;
-  font-size: 1em;
-  text-align: center;
-  padding: 6px;
-  border-radius: 6px;
-  display: inline-block;
-  animation: hof-pulse 1.6s infinite;
-  box-sizing: border-box;
-}
-
-/* keyframes riêng cho hof để tránh trùng tên */
-@keyframes hof-pulse {
-  0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,0,0,0.35); }
-  50%  { transform: scale(1.02); box-shadow: 0 6px 18px rgba(255,0,0,0.15); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,0,0,0); }
-}
-
-.note:hover { transform: translateY(-2px); filter: brightness(1.15); }
-
-.note-text { 
-  flex-grow: 1; 
-  text-align: left; 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;	
-}
-
-.note.ocg { background:#ffcdd2; color:#b71c1c; border-left:5px solid #b71c1c; }
-.note.ae { background:#c8e6c9; color:#2e7d32; border-left:5px solid #2e7d32; }
-.note.genesys { background:#bbdefb; color:#1976d2; border-left:5px solid #1976d2; }
-.note.tnt {
-  /* base để note.tnt vẫn hợp nhất layout */
-  color: #5a5a5a;
-  background: rgba(255,255,255,0.85);
-  border-left: 5px solid rgba(0,0,0,0.05);
-}
-.note.tnt.ocg {
-  background: #ffcdd2;
-  color: #b71c1c;
-  border-left: 5px solid #b71c1c;
-}
-.note.tnt.genesys {
-  background: #bbdefb;
-  color: #1976d2;
-  border-left: 5px solid #1976d2;
-}
-.note.nexus { background:#e0f7fa; color:#00838f; border-left:5px solid #00acc1; }
-.note.edison { background:#fff3e0; color:#e65100; border-left:5px solid #ff9800; }
-.note.anhtournament { background:#f3e5f5; color:#6a1b9a; border-left:5px solid #9c27b0; }
-
-.hof {
-    border: 3px solid red;
-    color: red;
-    font-weight: bold;
-    background: #ffe5e5;
-    text-align: center;
-}
-
-.note::after, .note::before {
-    padding: 1px 4px;
-    background: white;
+.note::after {
+    margin-left: 8px;
+    padding: 2px 5px;
+    background: #fff;
     border-radius: 4px;
-    font-size: 0.8em;
-    margin-left: 5px;
+    font-size: 0.7em;
+    white-space: nowrap;
     font-weight: 700;
 }
 
-/* badge/ico kiểu inline-block, không absolute */
-.note::after, .note::before, .hof::after, .hof::before {
-  display: inline-block;
-  vertical-align: middle;
-  white-space: nowrap;
-  padding: 0 6px;
-  margin-left: 4px;
-  box-sizing: border-box;
-  max-width: 100%;       /* prevent overflow */
-  overflow: hidden;
-  text-overflow: ellipsis;
+.ocg { background:#ffcdd2; border-left:5px solid #c62828; color:#b71c1c; }
+.ocg::after { content:"OCG"; border:1px solid #c62828; color:#c62828; }
+
+.ae { background:#c8e6c9; border-left:5px solid #2e7d32; color:#1b5e20; }
+.ae::after { content:"AE"; border:1px solid #2e7d32; color:#2e7d32; }
+
+.tnt { background:#fff9c4; border-left:5px solid #fbc02d; color:#f57f17; }
+.tnt::after { content:"TNT"; border:1px solid #fbc02d; color:#f57f17; }
+
+.genesys { background:#bbdefb; border-left:5px solid #1976d2; color:#0d47a1; }
+.genesys::after { content:"GNS"; border:1px solid #1976d2; color:#1976d2; }
+
+.nexus { background:#e0f7fa; border-left:5px solid #00acc1; color:#006064; }
+.nexus::after { content:"1103"; border:1px solid #00acc1; color:#00acc1; }
+
+.edison { background:#fff3e0; border-left:5px solid #ff9800; color:#e65100; }
+.edison::after { content:"E"; border:1px solid #ff9800; color:#ff9800; }
+
+.tour { background:#f3e5f5; border-left:5px solid #9c27b0; color:#6a1b9a; }
+.tour::after { content:"TOUR"; border:1px solid #9c27b0; color:#9c27b0; }
+
+.hof {
+    background:#ffecec;
+    border:2px solid red;
+    animation:pulse 1.3s infinite;
+}
+.hof::after { content:"HOF"; border:1px solid red; color:red; }
+
+@keyframes pulse {
+    0% { transform:scale(1); }
+    50% { transform:scale(1.03); }
+    100% { transform:scale(1); }
 }
 
-/* BADGES */
-.note.ocg::after { content:"OCG"; border:1px solid #b71c1c; color:#b71c1c; }
-.note.ae::after { content:"AE"; border:1px solid #2e7d32; color:#2e7d32; }
-.note.genesys::after { content:"GNS"; border:1px solid #1976d2; color:#1976d2; }
-.note.tnt::before { content:"📺"; margin-right:4px; background:none; }
-.note.nexus::after { content:"1103"; border:1px solid #00acc1; color:#00acc1; }
-.note.edison::after { content:"E"; border:1px solid #ff9800; color:#ff9800; }
-.note.anhtournament::after { content:"Tour"; border:1px solid #9c27b0; color:#9c27b0; }
-
-/* Badge / icon không ellipsis */
-.note::after,
-.note::before,
-.hof::after,
-.hof::before {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: visible !important;   /* <-- Quan trọng */
-    text-overflow: clip !important; /* <-- Quan trọng */
-    max-width: none !important;     /* <-- Quan trọng */
-    margin-left: 4px;
-    padding: 0 6px;
+/* Popup */
+.popup-bg {
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.65);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:10;
 }
 
-@media (max-width:768px) {
-    td { height: 95px; font-size: 11px; }
-    .day-number { font-size: 1.3em; }
+.popup {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    width:300px;
+    max-width:90%;
+    animation:fade 0.2s ease;
 }
 
-/* khi màn hình nhỏ, giảm padding badge để không đẩy layout */
-@media (max-width: 480px) {
-  .note::after, .note::before, .hof::after, .hof::before {
-    padding: 0 4px;
-    font-size: 0.75em;
-  }
-  .note-text { white-space: nowrap; }
+@keyframes fade {
+    from { opacity:0; transform:translateY(15px);}
+    to   { opacity:1; transform:translateY(0);}
+}
+
+/* Filter */
+.filter-box {
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-bottom:15px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container-fluid">
-  <div class="calendar-wrapper">
-    <div class="table-responsive">
-      <table id="calendar" class="table table-bordered text-center">
-        <caption>Tháng 12</caption>
-        <thead>
-          <tr>
-            <th>CN</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th><th>T6</th><th>T7</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
+<h2 style="text-align:center;color:white;text-shadow:1px 1px 4px black;margin-bottom:15px;">
+    LỊCH THÁNG 12
+</h2>
+
+<div class="filter-box">
+    <label><input type="checkbox" class="filter" value="ocg" checked> OCG</label>
+    <label><input type="checkbox" class="filter" value="ae" checked> AE</label>
+    <label><input type="checkbox" class="filter" value="tnt" checked> TNT</label>
+    <label><input type="checkbox" class="filter" value="genesys" checked> Genesys</label>
+    <label><input type="checkbox" class="filter" value="nexus" checked> Nexus</label>
+    <label><input type="checkbox" class="filter" value="edison" checked> Edison</label>
+    <label><input type="checkbox" class="filter" value="tour" checked> Tournament</label>
+    <label><input type="checkbox" class="filter" value="hof" checked> HoF</label>
 </div>
 
-<!-- BOOTSTRAP JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<div class="header-row">
+    <div class="header-cell">T2</div>
+    <div class="header-cell">T3</div>
+    <div class="header-cell">T4</div>
+    <div class="header-cell">T5</div>
+    <div class="header-cell">T6</div>
+    <div class="sat">T7</div>
+    <div class="sun">CN</div>
+</div>
+
+<div class="calendar" id="calendar"></div>
+<div id="popup-area"></div>
 
 <script>
-const tbody = document.querySelector("#calendar tbody");
+const cal = document.getElementById("calendar");
+const popupArea = document.getElementById("popup-area");
+
 const today = new Date();
+today.setHours(0,0,0,0);
+
+// Năm và Tháng (Tháng 11 là tháng 12 vì chỉ số bắt đầu từ 0)
 const year = today.getFullYear();
-const month = 11; // December (0-based)
-const firstDay = new Date(year, month, 1).getDay();
-const daysInMonth = new Date(year, month+1, 0).getDate();
+const month = 11;
+const firstDayOfMonth = new Date(year, month, 1).getDay(); // CN=0, T2=1... T7=6
+const daysInMonth = new Date(year, month+1, 0).getDate(); // Số ngày trong tháng (31)
 
-let date = 1;
+// Xác định vị trí bắt đầu (T2=0, T3=1... CN=6)
+const startIndex = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
 
-for (let i = 0; i < 6; i++) {
-  const row = document.createElement("tr");
+// Tính tổng số ô cần thiết để không bị thừa hàng
+const totalDays = daysInMonth + startIndex; // Tổng số ngày trong tháng + ô trống đầu tháng
+const totalCells = Math.ceil(totalDays / 7) * 7; // Làm tròn lên bội số của 7 để có số ô đủ
 
-  for (let j = 0; j < 7; j++) {
-    const cell = document.createElement("td");
-
-    if (i === 0 && j < firstDay) {
-        cell.classList.add("other-month");
-        cell.innerHTML = ""; // show as shaded cells for days before month
-    } 
-    else if (date > daysInMonth) {
-        cell.classList.add("other-month");
-        cell.innerHTML = "";
-    }
-    else {
-      const daySpan = document.createElement("span");
-      daySpan.classList.add("day-number");
-      daySpan.textContent = date;
-      cell.appendChild(daySpan);
-
-      const cellDate = new Date(year, month, date);
-
-      if (cellDate.toDateString() === today.toDateString()) cell.classList.add("today");
-      else if (cellDate < today) cell.classList.add("past-day");
-
-      if (j === 0 || j === 6) cell.classList.add("weekend");
-
-      const weekIndex = Math.ceil((date + firstDay) / 7);
-
-      // Sunday events
-      if (j === 0) {
-          if (weekIndex === 2) addNote(cell, "Mahado Nexus 1103", "nexus");
-          if (weekIndex === 4) addNote(cell, "Mahado Edison", "edison");
-          if (date === 14) addNote(cell, "Mahado Genesys", "genesys");
-          if (date === 28) addNote(cell, "Anh Bình Tournament", "anhtournament");
-      }
-
-      // Tuesday events (T3)
-      if (j === 2 && [1,3,4,5].includes(weekIndex)) {
-          addNote(cell, "TNT OCG", "tnt", "ocg");
-      }
-
-      // Saturday events (T7)
-      if (j === 6 && [1,3].includes(weekIndex)) {
-          addNote(cell, "Mahado OCG Open", "ocg");
-      }
-
-      // Specific dates
-      if (date === 9) addNote(cell, "TNT Genesys", "tnt", "genesys");
-      if (date === 13) addNote(cell, "Mahado Open AE", "ae");
-      if (date === 27) addNote(cell, "Mahado HoF Kickoff", "hof", null, true);
-
-      date++;
-    }
-
-    row.appendChild(cell);
-  }
-
-  tbody.appendChild(row);
-  if (date > daysInMonth) break;
+// Tạo các ô ngày (Loại bỏ vòng lặp 42 ô cố định)
+for (let i = 0; i < totalCells; i++) {
+    cal.innerHTML += `<div class='day'></div>`;
 }
 
-// addNote now accepts variable classes safely
-function addNote(cell, text, cls=null, cls2=null, special=false) {
-    let note = document.createElement("span");
+const cells = document.querySelectorAll(".day");
 
-    if (special && cls) {
-        note.classList.add(cls); // e.g. hof (special styling already)
-    } else {
-        note.classList.add("note");
-        if (cls) {
-            // if cls contains spaces (accidental), split them safely
-            cls.toString().split(/\s+/).filter(Boolean).forEach(c => note.classList.add(c));
-        }
-        if (cls2) {
-            cls2.toString().split(/\s+/).filter(Boolean).forEach(c => note.classList.add(c));
-        }
+cells.forEach((c, i) => {
+    const dayOfMonth = i - startIndex + 1;
+
+    // Ngày không thuộc tháng hiện tại (ngày trước và ngày sau)
+    if (dayOfMonth < 1 || dayOfMonth > daysInMonth) {
+        c.classList.add("other");
+        return;
     }
 
-    let t = document.createElement("span");
-    t.classList.add("note-text");
-    t.textContent = text;
-    note.appendChild(t);
+    const date = new Date(year, month, dayOfMonth);
+    c.innerHTML = `<div class='day-number'>${dayOfMonth}</div>`;
 
-    // bootstrap tooltip
-    note.setAttribute("data-bs-toggle", "tooltip");
-    note.setAttribute("title", text);
+    // Ngày trong quá khứ
+    if (date < today) c.classList.add("past");
+    // Ngày hiện tại
+    if (dayOfMonth === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+         c.classList.add("today");
+    }
 
-    cell.appendChild(note);
+    insertEvents(dayOfMonth, c);
+});
+
+function insertEvents(d, cell){
+    const add = (text, cls) => {
+        const div = document.createElement("div");
+        div.className = "note " + cls;
+        div.textContent = text;
+        div.onclick = () => showPopup(text, cls);
+        cell.appendChild(div);
+    };
+
+    if (d===7) add("Mahado Nexus 1103","nexus");
+    if (d===21) add("Mahado Edison","edison");
+    if (d===9) add("TNT Genesys","tnt genesys");
+    if (d===13) add("Mahado Open AE","ae");
+    if (d===14) add("Mahado Genesys","genesys");
+    if (d===27) add("Mahado HoF Kickoff","hof");
+    if (d===28) add("Anh Bình Tournament","tour");
+
+    const weekday = new Date(year,month,d).getDay();
+    const weekNum = Math.ceil((d+startIndex)/7);
+
+    if (weekday===2 && (weekNum===1 || weekNum===3 || weekNum===4 || weekNum===5)) // Thứ 3 tuần 1 & 3
+        add("TNT OCG","tnt ocg");
+
+    if (weekday===6 && (weekNum===1 || weekNum===3)) // Thứ 7 tuần 1 & 3
+        add("Mahado OCG Open","ocg");
 }
 
-// initialize bootstrap tooltips
-const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+/* Popup */
+function showPopup(text, cls){
+    popupArea.innerHTML = `
+    <div class='popup-bg' onclick='closePopup()'>
+        <div class='popup' onclick='event.stopPropagation()'>
+            <h3>${text}</h3>
+            <p>Loại: <b>${cls.toUpperCase()}</b></p>
+            <button onclick='closePopup()'>Đóng</button>
+        </div>
+    </div>`;
+}
+
+function closePopup(){ popupArea.innerHTML=""; }
+
+/* Filter */
+document.querySelectorAll(".filter").forEach(chk=>{
+    chk.addEventListener("change",()=>{
+        const type = chk.value;
+        const visible = chk.checked;
+        document.querySelectorAll(".note."+type)
+        .forEach(n=>n.style.display = visible ? "flex":"none");
+    });
+});
 </script>
-
 </body>
 </html>

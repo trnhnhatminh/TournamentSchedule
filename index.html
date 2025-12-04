@@ -187,6 +187,39 @@ body {
     justify-content:center;
     margin-bottom:15px;
 }
+
+.note {
+    /* Các thuộc tính hiện tại... */
+    overflow-wrap: break-word; /* Đảm bảo từ dài tự động ngắt xuống dòng */
+    word-break: break-all; /* Ngắt từ cứng rắn hơn */
+}
+
+@media (max-width: 768px) {
+    /* 1. Thay đổi bố cục Lịch sang 1 cột trên di động */
+    .calendar {
+        grid-template-columns: 1fr; /* Chỉ 1 cột duy nhất */
+        gap: 8px; /* Tăng khoảng cách giữa các ô ngày */
+    }
+
+    /* 2. Thay đổi bố cục Header thành 1 cột */
+    .header-row {
+        display: none; /* Ẩn Header gốc CN-T7 vì không còn phù hợp với bố cục 1 cột */
+    }
+
+    /* 3. Tăng chiều rộng ô ngày để hiển thị tốt hơn */
+    .day {
+        min-height: auto; /* Bỏ giới hạn chiều cao tối thiểu */
+        padding: 12px;
+    }
+
+    /* 4. Tối ưu lại font chữ và kích thước trên di động */
+    .day-number {
+        font-size: 1.2em;
+    }
+    .note {
+        font-size: 0.9em;
+    }
+}
 </style>
 </head>
 

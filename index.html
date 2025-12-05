@@ -308,6 +308,29 @@ body {
     50% { opacity: 0.7; }
 }
 
+@media (max-width: 768px) {
+
+    /* Làm ô thuộc tháng khác sáng hơn */
+    .other {
+        background: rgba(0,0,0,0.05) !important;
+        color: #555 !important;
+    }
+
+    /* Làm ô ngày đã qua dễ nhìn hơn */
+    .past {
+        opacity: 1 !important;
+        text-decoration: line-through;
+        text-decoration-color: rgba(0,0,0,0.35);
+        background: rgba(255,255,255,0.65) !important;
+        color: #555 !important;
+    }
+
+    /* Làm ô ngày thường sáng hơn */
+    .day {
+        background: rgba(255,255,255,0.85) !important;
+    }
+}
+
 </style>
 </head>
 

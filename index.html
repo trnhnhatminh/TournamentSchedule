@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lịch Tháng 12 - Tối ưu hóa</title>
+<title>Lịch Tháng 12</title>
 
 <style>
 body {
@@ -282,7 +282,7 @@ body {
     
     /* Ẩn toàn bộ lịch để cảnh báo được chú ý */
     .calendar, .header-row, .filter-box {
-        opacity: 0.8; 
+        opacity: 0.95; 
     }
 }
 
@@ -298,6 +298,28 @@ body {
     }
 }
 
+@media (max-width: 768px) {
+
+    /* Làm ô thuộc tháng khác sáng hơn */
+    .other {
+        background: rgba(0,0,0,0.05) !important;
+        color: #555 !important;
+    }
+
+    /* 🔥 FIX Past-day bị sáng trên mobile */
+    .past {
+        opacity: 1 !important;
+        text-decoration: line-through;
+        text-decoration-color: rgba(0,0,0,0.35);
+        background: rgba(0,0,0,0.15) !important; /* tối hơn */
+        color: #555 !important;
+    }
+
+    /* Tối ưu ngày thường */
+    .day {
+        background: rgba(255,255,255,0.85) !important;
+    }
+}
 
 /* 🔴 Icon TV cho sự kiện có Stream (Class: has-stream) */
 .note.has-stream {
@@ -329,18 +351,18 @@ body {
         color: #555 !important;
     }
 
-    /* Làm ô ngày đã qua dễ nhìn hơn */
+    /* Ngày thường */
+    .day {
+        background: rgba(255,255,255,0.85) !important;
+    }
+
+    /* 🔥 Past-day — tối màu và gạch ngang */
     .past {
         opacity: 1 !important;
         text-decoration: line-through;
         text-decoration-color: rgba(0,0,0,0.35);
-        background: rgba(255,255,255,0.65) !important;
-        color: #555 !important;
-    }
-
-    /* Làm ô ngày thường sáng hơn */
-    .day {
-        background: rgba(255,255,255,0.85) !important;
+        background: rgba(0,0,0,0.18) !important;
+        color: #ffffff !important;
     }
 }
 

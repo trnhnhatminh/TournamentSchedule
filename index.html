@@ -1,11 +1,35 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Lịch Tháng 12</title>
 
 <style>
+/* --- ĐỊNH NGHĨA BIẾN CSS (CUSTOM PROPERTIES) --- */
+:root {
+    /* Màu chính theo loại giải */
+    --color-ocg: #c62828;
+    --color-ae: #2e7d32;
+    --color-tnt: #f57f17;
+    --color-genesys: #1976d2;
+    --color-nexus: #00acc1;
+    --color-edison: #ff9800;
+    --color-tour: #9c27b0;
+    --color-hof: red;
+
+    /* Background nhạt theo loại giải */
+    --bg-ocg: #ffcdd2;
+    --bg-ae: #c8e6c9;
+    --bg-tnt: #fff9c4;
+    --bg-genesys: #bbdefb;
+    --bg-nexus: #e0f7fa;
+    --bg-edison: #fff3e0;
+    --bg-tour: #f3e5f5;
+    --bg-hof: #ffecec;
+}
+
+/* ———————————————— GENERAL BACKGROUND ———————————————— */
 body {
     font-family: 'Segoe UI', sans-serif;
     background: url('https://i.postimg.cc/MpfwkmQj/TNT_24.png') center/cover fixed;
@@ -13,9 +37,10 @@ body {
     margin: 0;
 }
 
+/* ———————————————— HEADER (T2–CN) ———————————————— */
 .header-row {
     display: grid;
-    grid-template-columns: repeat(7,1fr);
+    grid-template-columns: repeat(7, 1fr);
     max-width: 1200px;
     margin: 0 auto 6px;
     text-align: center;
@@ -25,28 +50,22 @@ body {
     letter-spacing: 1px;
 }
 .header-cell {
-    padding: 10px 0;
     background: rgba(0,0,0,0.75);
+    padding: 10px 0;
     border-radius: 6px;
 }
-
-/* Header Chủ Nhật */
-.sun {
-    background-color: rgba(255, 59, 48, 0.75); 
-    color: white;
+.sat { 
+    background: rgba(255,204,0,0.75); color:#000; 
+    padding: 10px 0;
+    border-radius: 6px;
+}
+.sun { 
+    background: rgba(255,59,48,0.75); color:white; 
     padding: 10px 0;
     border-radius: 6px;
 }
 
-/* Header Thứ Bảy */
-.sat {
-    background-color: rgba(255, 204, 0, 0.75);
-    color: black;
-    padding: 10px 0;
-    border-radius: 6px;
-}
-
-/* Calendar Grid */
+/* ———————————————— GRID CALENDAR ———————————————— */
 .calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -54,24 +73,59 @@ body {
     max-width: 1200px;
     margin: auto;
 }
-
 .day {
     background: rgba(255,255,255,0.95);
     border-radius: 8px;
     padding: 8px;
     min-height: 110px;
-    position: relative;
     display: flex;
     flex-direction: column;
 }
+.other { background: rgba(74, 74, 74, 0.809) !important; color:#777 !important; }
 
-.other { background: rgba(0,0,0,0.15); color:#777; }
+/* ———————————————— GRID ITEM ANIMATIONS ———————————————— */
+
+/* hiệu ứng load vào */
+.day {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: dayFadeIn 0.45s ease forwards;
+}
+
+/* tạo trễ nhỏ cho từng ô → hiệu ứng lan tỏa */
+.day:nth-child(1) { animation-delay: .02s; }
+.day:nth-child(2) { animation-delay: .04s; }
+.day:nth-child(3) { animation-delay: .06s; }
+.day:nth-child(4) { animation-delay: .08s; }
+.day:nth-child(5) { animation-delay: .10s; }
+.day:nth-child(6) { animation-delay: .12s; }
+.day:nth-child(7) { animation-delay: .14s; }
+/* Tự động lặp lại thêm nếu cần */
+.day:nth-child(14) { animation-delay: .16s; }
+.day:nth-child(21) { animation-delay: .18s; }
+.day:nth-child(28) { animation-delay: .20s; }
+
+@keyframes dayFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* hiệu ứng hover – chỉ desktop */
+@media (hover:hover) {
+    .day:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+        transition: .25s ease;
+        z-index: 2;
+    }
+}
 
 .past {
-    opacity: 0.55;
+    opacity: 0.6 !important;
+    background: rgba(134, 134, 134, 0.7) !important;
+    color: white !important;
     text-decoration: line-through;
     text-decoration-thickness: 2px;
-    text-decoration-color: rgba(0,0,0,0.45);
 }
 
 .today {
@@ -85,285 +139,202 @@ body {
     margin-bottom: 6px;
 }
 
-/* Tối ưu hóa: Làm nổi bật ngày cuối tuần (Thứ 7 & Chủ Nhật) */
-.day:nth-child(7n) .day-number { /* Chủ Nhật */
-    color: #c62828;
-}
-.day:nth-child(7n-1) .day-number { /* Thứ Bảy */
-    color: #fbc02d;
-}
+.day:nth-child(7n) .day-number { color:#c62828; }
+.day:nth-child(7n-1) .day-number { color:#fbc02d; }
 
-/* Note styling */
+/* ———————————————— EVENT STYLES ———————————————— */
 .note {
-    display: flex;
-    justify-content: space-between;
-    padding: 4px 6px;
     margin-top: 4px;
+    padding: 4px 6px;
     border-radius: 6px;
-    font-size: 0.85em;
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 2px;
     cursor: pointer;
-    transition: 0.2s;
-    /* Giữ word-break để tăng cường khả năng ngắt từ */
-    word-break: break-word; 
-}
-.note:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.18);
-}
-
-.note::after {
-    margin-left: 8px;
-    
-    display: inline-flex;
-    align-items: center; /* Căn giữa theo chiều dọc */
-    justify-content: center; /* Căn giữa theo chiều ngang (tùy chọn) */
-
-    padding: 0 4px;     /* Loại bỏ padding dọc (0), giữ padding ngang (4px) */
-    line-height: normal;   /* Kiểm soát chiều cao border */
-    
-    box-sizing: border-box;
-
-    background: #fff;
-    border-radius: 4px;
-    font-size: 0.7em;
-    white-space: nowrap;
-    font-weight: 700;
-    flex-shrink: 0; /* Ngăn icon bị co lại */
-
-    align-self: center;
-}
-
-/* 🔴 Thêm CSS mới để xử lý ngắt dòng cho văn bản sự kiện */
-.note span {
-    flex-grow: 1;       /* Cho phép văn bản sự kiện chiếm hết không gian */
-    min-width: 0;       /* Quan trọng: Cho phép phần tử flex này ngắt dòng */
-    overflow-wrap: break-word; 
+    font-size: .85em;
+    font-weight: 600;
+    transition: .2s;
     word-break: break-word;
 }
 
-.ocg { background:#ffcdd2; border-left:5px solid #c62828; color:#b71c1c; }
-.ocg::after { content:"OCG"; border:1px solid #c62828; color:#c62828; }
+/* FIX: prevent items sticking to the right edge */
+/* Desktop only */
+@media(min-width:769px){
+    .note {
+        justify-content: space-between;
+        padding-right: 10px;
+    }
+}
 
-.ae { background:#c8e6c9; border-left:5px solid #2e7d32; color:#1b5e20; }
-.ae::after { content:"AE"; border:1px solid #2e7d32; color:#2e7d32; }
+/* Mobile: đặt lại chuẩn để không bị dạt phải */
+@media(max-width:768px){
+    .note {
+        justify-content: flex-start;
+        gap: 6px;
+        padding-right: 6px;
+    }
+}
 
-.tnt { background:#fff9c4; border-left:5px solid #fbc02d; color:#f57f17; }
-.tnt::after { content:"TNT"; border:1px solid #fbc02d; color:#f57f17; }
+/* ensure tag isn't hugging the right border */
+.note .tag {
+    margin-left: 6px !important;
+}
 
-.genesys { background:#bbdefb; border-left:5px solid #1976d2; color:#0d47a1; }
-.genesys::after { content:"GNS"; border:1px solid #1976d2; color:#1976d2; }
+.note:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,.18); }
 
-.nexus { background:#e0f7fa; border-left:5px solid #00acc1; color:#006064; }
-.nexus::after { content:"1103"; border:1px solid #00acc1; color:#00acc1; }
+/* make the event name take remaining space so tag pushes to right */
+.note > span:first-child {
+    display: inline-block;
+    line-height: 1.15;
+}
 
-.edison { background:#fff3e0; border-left:5px solid #ff9800; color:#e65100; }
-.edison::after { content:"E"; border:1px solid #ff9800; color:#ff9800; }
+/* TAG (badge) styling: white background, colored border and text from type */
+.note .tag {
+    padding: 2px 4px;
+    border-radius: 6px;
+    font-size: .75em;
+    font-weight: 700;
+    white-space: nowrap;
+    background: #fff;            /* ensure white background */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent; 
+    color: inherit;             /* we'll override per type if needed */
+}
 
-.tour { background:#f3e5f5; border-left:5px solid #9c27b0; color:#6a1b9a; }
-.tour::after { content:"TOUR"; border:1px solid #9c27b0; color:#9c27b0; }
+@media(max-width:768px){
+    .note .tag {
+        margin-left: 4px !important;
+    }
+}
+
+/* make stream icon sit left and not affect flex */
+.stream-icon {
+    font-size: 1.05em;
+    flex: 0 0 auto;
+    margin-right: 6px;
+    line-height: 1;
+}
+
+/* COLORS BY TYPE (sử dụng biến CSS) */
+.ocg { background:var(--bg-ocg); border-left:5px solid var(--color-ocg); color:var(--color-ocg); }
+.ocg .tag { border-color: var(--color-ocg); color: var(--color-ocg); }
+
+.ae { background:var(--bg-ae); border-left:5px solid var(--color-ae); color:var(--color-ae); }
+.ae .tag { border-color: var(--color-ae); color: var(--color-ae); }
+
+.tnt { background:var(--bg-tnt); border-left:5px solid var(--color-tnt); color:var(--color-tnt); }
+.tnt .tag { border-color: var(--color-tnt); color: var(--color-tnt); }
+
+.genesys { background:var(--bg-genesys); border-left:5px solid var(--color-genesys); color:var(--color-genesys); }
+.genesys .tag { border-color: var(--color-genesys); color: var(--color-genesys); }
+
+.nexus { background:var(--bg-nexus); border-left:5px solid var(--color-nexus); color:var(--color-nexus); }
+.nexus .tag { border-color: var(--color-nexus); color: var(--color-nexus); }
+
+.edison { background:var(--bg-edison); border-left:5px solid var(--color-edison); color:var(--color-edison); }
+.edison .tag { border-color: var(--color-edison); color: var(--color-edison); }
+
+.tour { background:var(--bg-tour); border-left:5px solid var(--color-tour); color:var(--color-tour); }
+.tour .tag { border-color: var(--color-tour); color: var(--color-tour); }
 
 .hof {
-    background:#ffecec;
-    border:2px solid red;
+    background:var(--bg-hof);
+    border-left:5px solid var(--color-hof);
     animation:pulse 1.3s infinite;
+    color: var(--color-hof);
 }
-.hof::after { content:"HOF"; border:1px solid red; color:red; }
+.hof .tag { border-color: var(--color-hof); color: var(--color-hof); }
 
-@keyframes pulse {
-    0% { transform:scale(1); }
-    50% { transform:scale(1.03); }
-    100% { transform:scale(1); }
-}
+@keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.03)} 100%{transform:scale(1)} }
 
-/* Popup */
+/* ———————————————— POPUP ———————————————— */
 .popup-bg {
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.65);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:10;
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.65);
+    display:flex; justify-content:center; align-items:center;
+    z-index:20;
 }
-
 .popup {
     background:white;
     padding:20px;
     border-radius:12px;
     width:300px;
-    max-width:90%;
-    animation:fade 0.2s ease;
+    animation:fade .2s ease;
 }
+@keyframes fade { from{opacity:0; transform:translateY(10px)} to{opacity:1;} }
 
-@keyframes fade {
-    from { opacity:0; transform:translateY(15px);}
-    to   { opacity:1; transform:translateY(0);}
-}
-
-/* Filter */
+/* ———————————————— FILTER ———————————————— */
 .filter-box {
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:center;
-    margin-bottom:15px;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
 }
 
-.note {
-    /* Các thuộc tính hiện tại... */
-    overflow-wrap: break-word; /* Đảm bảo từ dài tự động ngắt xuống dòng */
-    word-break: break-all; /* Ngắt từ cứng rắn hơn */
+/* Từng nhóm filter (Stream | Loại giải) */
+.filter-group {
+    background: rgba(255,255,255,0.25) !important;
+    padding: 12px 18px;
+    border-radius: 12px;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.5);
+    min-width: 140px;
 }
 
-@media (max-width: 768px) {
-    /* 1. Thay đổi bố cục Lịch sang 1 cột trên di động */
-    .calendar {
-        grid-template-columns: 1fr; /* Chỉ 1 cột duy nhất */
-        gap: 8px; /* Tăng khoảng cách giữa các ô ngày */
-    }
-
-    /* 2. Thay đổi bố cục Header thành 1 cột */
-    .header-row {
-        display: none; /* Ẩn Header gốc CN-T7 vì không còn phù hợp với bố cục 1 cột */
-    }
-
-    /* 3. Tăng chiều rộng ô ngày để hiển thị tốt hơn */
-    .day {
-        min-height: auto; /* Bỏ giới hạn chiều cao tối thiểu */
-        padding: 12px;
-    }
-
-    /* 4. Tối ưu lại font chữ và kích thước trên di động */
-    .day-number {
-        font-size: 1.2em;
-    }
-    .note {
-        font-size: 0.9em;
-    }
-}
-
-#desktop-mode-alert {
-    display: none; /* Mặc định ẩn cảnh báo */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    z-index: 9999;
-    padding: 20px;
+.filter-title {
     text-align: center;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 0.95em;
+    color: #fff !important;
+    text-shadow: 1px 1px 2px black;
 }
 
-#desktop-mode-alert h3 {
-    color: #cc0000;
-}
-
-#desktop-mode-alert button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    margin-top: 15px;
+/* Ô filter */
+.filter-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
     cursor: pointer;
+    margin: 4px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.45) !important;
+    transition: .25s;
 }
 
-
-/* Hiển thị cảnh báo chỉ trên màn hình nhỏ (Mobile) */
-@media (max-width: 768px) {
-    #desktop-mode-alert {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    /* Ẩn toàn bộ lịch để cảnh báo được chú ý */
-    .calendar, .header-row, .filter-box {
-        opacity: 0.95; 
-    }
+.filter-item:hover {
+    background: rgba(255,255,255,0.32);
+    transform: translateY(-2px);
 }
 
-@media (max-width: 768px) {
-    /* Ẩn mọi ô trong tháng nếu không có note */
-    td:not(:has(.note)):not(:has(.hof)) {
-        display: none !important;
-    }
-
-    /* Ẩn ô của tháng khác (nếu còn) */
-    .other {
-        display: none !important;
-    }
+.filter-item input {
+    transform: scale(1.1);
 }
 
-@media (max-width: 768px) {
-
-    /* Làm ô thuộc tháng khác sáng hơn */
-    .other {
-        background: rgba(0,0,0,0.05) !important;
-        color: #555 !important;
-    }
-
-    /* 🔥 FIX Past-day bị sáng trên mobile */
-    .past {
-        opacity: 1 !important;
-        text-decoration: line-through;
-        text-decoration-color: rgba(0,0,0,0.35);
-        background: rgba(0,0,0,0.15) !important; /* tối hơn */
-        color: #555 !important;
-    }
-
-    /* Tối ưu ngày thường */
-    .day {
-        background: rgba(255,255,255,0.85) !important;
-    }
+/* Icon stream lớn */
+.stream-icon-big {
+    font-size: 1.4em;
 }
 
-/* 🔴 Icon TV cho sự kiện có Stream (Class: has-stream) */
-.note.has-stream {
-    /* Đảm bảo flexbox vẫn hoạt động tốt khi có thêm ::before */
-    align-items: center; 
+/* TAG style (thừa hưởng màu từng loại) */
+.filter-item .tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.75em;
 }
 
-.note.has-stream::before {
-    content: "📺"; /* Mã Unicode của icon Tivi */
-    margin-right: 6px;
-    font-size: 1em;
-    flex-shrink: 0; /* Ngăn icon bị co lại */
-    
-    /* Làm cho icon hơi nổi bật */
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.4); 
-    animation: blink 3s infinite; /* Tùy chọn: Thêm hiệu ứng nhấp nháy */
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-@media (max-width: 768px) {
-
-    /* Làm ô thuộc tháng khác sáng hơn */
-    .other {
-        background: rgba(0,0,0,0.05) !important;
-        color: #555 !important;
-    }
-
-    /* Ngày thường */
-    .day {
-        background: rgba(255,255,255,0.85) !important;
-    }
-
-    /* 🔥 Past-day — tối màu và gạch ngang */
-    .past {
-        opacity: 1 !important;
-        text-decoration: line-through;
-        text-decoration-color: rgba(0,0,0,0.35);
-        background: rgba(0,0,0,0.18) !important;
-        color: #ffffff !important;
-    }
+/* ———————————————— MOBILE MODE ———————————————— */
+@media(max-width:768px){
+    .calendar{ grid-template-columns:1fr; }
+    .header-row{ display:none; }
+    .day{ padding:8px 10px; min-height: 70px !important; border-radius: 6px; }
+    .day-number{ font-size:1.1em !important; margin-bottom: 4px; }
 }
 
 </style>
@@ -375,22 +346,61 @@ body {
     LỊCH THÁNG 12
 </h2>
 
-<div id="desktop-mode-alert">
-    <h3>Xin lỗi!</h3>
-    <p>Để có trải nghiệm lịch tốt nhất và không bị lỗi bố cục 7 cột, vui lòng bật chế độ **"Trang web cho máy tính"** (Request Desktop Site) trong cài đặt trình duyệt của bạn.</p>
-    <button onclick="document.getElementById('desktop-mode-alert').style.display='none'">Đã hiểu</button>
+<div class="filter-box">
+
+    <div class="filter-group">
+        <div class="filter-title">Stream</div>
+        <label class="filter-item stream-filter">
+            <input type="checkbox" class="filter-stream" checked>
+            <span class="stream-icon-big">📺</span>
+        </label>
+        <label class="filter-item">
+            <input type="checkbox" class="filter-stream-no" checked>
+            <span class="stream-icon-big">🚫</span>
+        </label>
+    </div>
+
+    <div class="filter-group">
+        <div class="filter-title">Loại Giải</div>
+
+        <label class="filter-item" data-type="ocg">
+            <input type="checkbox" class="filter" value="ocg" checked>
+            <span class="tag ocg">OCG</span>
+        </label>
+
+        <label class="filter-item" data-type="ae">
+            <input type="checkbox" class="filter" value="ae" checked>
+            <span class="tag ae">AE</span>
+        </label>
+
+        <label class="filter-item" data-type="genesys">
+            <input type="checkbox" class="filter" value="genesys" checked>
+            <span class="tag genesys">GNS</span>
+        </label>
+
+        <label class="filter-item" data-type="nexus">
+            <input type="checkbox" class="filter" value="nexus" checked>
+            <span class="tag nexus">1103</span>
+        </label>
+
+        <label class="filter-item" data-type="edison">
+            <input type="checkbox" class="filter" value="edison" checked>
+            <span class="tag edison">E</span>
+        </label>
+
+        <label class="filter-item" data-type="tour">
+            <input type="checkbox" class="filter" value="tour" checked>
+            <span class="tag tour">TOUR</span>
+        </label>
+
+        <label class="filter-item" data-type="hof">
+            <input type="checkbox" class="filter" value="hof" checked>
+            <span class="tag hof">HOF</span>
+        </label>
+
+    </div>
 </div>
 
-<div class="filter-box">
-    <label><input type="checkbox" class="filter" value="ocg" checked> OCG</label>
-    <label><input type="checkbox" class="filter" value="ae" checked> AE</label>
-    <label><input type="checkbox" class="filter" value="tnt" checked> TNT</label>
-    <label><input type="checkbox" class="filter" value="genesys" checked> Genesys</label>
-    <label><input type="checkbox" class="filter" value="nexus" checked> Nexus</label>
-    <label><input type="checkbox" class="filter" value="edison" checked> Edison</label>
-    <label><input type="checkbox" class="filter" value="tour" checked> Tournament</label>
-    <label><input type="checkbox" class="filter" value="hof" checked> HoF</label>
-</div>
 
 <div class="header-row">
     <div class="header-cell">T2</div>
@@ -406,178 +416,226 @@ body {
 <div id="popup-area"></div>
 
 <script>
-const cal = document.getElementById("calendar");
+/* ——————————————————————————— EVENT DATA ——————————————————————————— */
+
+const TYPE_ICONS = {
+    ocg: "OCG",
+    ae: "AE",
+    tnt: "TNT", // Không có trong data events nhưng giữ lại để phòng hờ
+    genesys: "GNS",
+    nexus: "1103",
+    edison: "E",
+    tour: "TOUR",
+    hof: "HOF"
+};
+
+const events = [
+    { day:7, name:"Mahado Nexus", type:"nexus", stream:false },
+    { day:21, name:"Mahado Edison", type:"edison", stream:false },
+    { day:9, name:"TNT Genesys", type:"genesys", stream:true },
+    { day:13, name:"Mahado AE Open", type:"ae", stream:false },
+    { day:14, name:"Mahado Genesys", type:"genesys", stream:false },
+    { day:27, name:"Mahado HoF Kickoff", type:"hof", stream:true },
+    { day:28, name:"Anh Bình Tournament", type:"tour", stream:false },
+
+    /* WEEKLY TNT OCG TUESDAY */
+    { weekly:true, weekday:2, weeks:[1,3,4,5], name:"TNT OCG", type:"ocg", stream:true },
+
+    /* WEEKLY OCG OPEN SATURDAY */
+    { weekly:true, weekday:6, weeks:[1,3], name:"Mahado OCG Open", type:"ocg", stream:false }
+];
+
+/* ——————————————————————————— BUILDING THE CALENDAR ——————————————————————————— */
+
+const calendarElement = document.getElementById("calendar");
 const popupArea = document.getElementById("popup-area");
 
 const today = new Date();
 today.setHours(0,0,0,0);
 
-// Năm và Tháng (Tháng 11 là tháng 12 vì chỉ số bắt đầu từ 0)
+// Thiết lập tháng và năm cho lịch (Hiện tại là Tháng 12)
 const year = today.getFullYear();
-const month = 11;
-const firstDayOfMonth = new Date(year, month, 1).getDay(); // CN=0, T2=1... T7=6
-const daysInMonth = new Date(year, month+1, 0).getDate(); // Số ngày trong tháng (31)
+const month = 11; // 0 = Jan, 11 = Dec
 
-// Xác định vị trí bắt đầu (T2=0, T3=1... CN=6)
-const startIndex = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+const firstDay = new Date(year, month, 1).getDay(); // 0=CN, 1=T2, ...
+const daysInMonth = new Date(year, month+1, 0).getDate();
 
-// Tính tổng số ô cần thiết để không bị thừa hàng
-const totalDays = daysInMonth + startIndex; // Tổng số ngày trong tháng + ô trống đầu tháng
-const totalCells = Math.ceil(totalDays / 7) * 7; // Làm tròn lên bội số của 7 để có số ô đủ
+// Bắt đầu từ T2 (1), T3 (2), ... CN (0) chuyển thành T2 (0), T3 (1), ... CN (6)
+const startIndex = firstDay === 0 ? 6 : firstDay - 1;
+const totalCells = Math.ceil((daysInMonth + startIndex)/7)*7;
 
-// Tạo các ô ngày (Loại bỏ vòng lặp 42 ô cố định)
-for (let i = 0; i < totalCells; i++) {
-    cal.innerHTML += `<div class='day'></div>`;
+const KNOWN_TYPES = Object.keys(TYPE_ICONS);
+
+// Tối ưu hóa: Tạo các ô lịch trong DocumentFragment (bộ nhớ)
+const fragment = document.createDocumentFragment();
+for(let i=0;i<totalCells;i++){
+    const cell = document.createElement("div");
+    cell.className = "day";
+    fragment.appendChild(cell);
 }
+calendarElement.appendChild(fragment);
 
 const cells = document.querySelectorAll(".day");
 
-cells.forEach((c, i) => {
-    const dayOfMonth = i - startIndex + 1;
+/* ———————————————— PLACE DATES ———————————————— */
+cells.forEach((cell,i)=>{
+    const d = i - startIndex + 1;
 
-    // Ngày không thuộc tháng hiện tại (ngày trước và ngày sau)
-    if (dayOfMonth < 1 || dayOfMonth > daysInMonth) {
-        c.classList.add("other");
+    if(d < 1 || d > daysInMonth){
+        cell.classList.add("other");
         return;
     }
 
-    const date = new Date(year, month, dayOfMonth);
-    c.innerHTML = `<div class='day-number'>${dayOfMonth}</div>`;
+    const date = new Date(year,month,d);
+    cell.innerHTML = `<div class="day-number">${d}</div>`;
 
-    // Ngày trong quá khứ
-    if (date < today) c.classList.add("past");
-    // Ngày hiện tại
-    if (dayOfMonth === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-         c.classList.add("today");
-    }
+    // Sửa lỗi: So sánh ngày hôm qua/hôm nay phải so sánh cả tháng/năm
+    const isPast = date < today;
+    const isToday = (
+        d === today.getDate() && 
+        month === today.getMonth() && 
+        year === today.getFullYear()
+    );
 
-    insertEvents(dayOfMonth, c);
+    if(isPast) cell.classList.add("past");
+    if(isToday) cell.classList.add("today");
+
+    addEventsToCell(d, cell);
 });
 
-// Thay thế hàm insertEvents hiện tại
-function insertEvents(d, cell){
-    const add = (text, cls, hasStream = false) => { 
-        const div = document.createElement("div");
-        div.className = "note " + cls;
-        
-        // 🔴 Thêm class "has-stream" nếu cần
-        if (hasStream) {
-            div.className += " has-stream";
+/* ———————————————— RENDER EVENTS ———————————————— */
+function addEventsToCell(day, cell){
+    // DayOfWeek: 0=CN, 1=T2, ... 6=T7
+    const weekday = new Date(year,month,day).getDay(); 
+    // Week Number: tuần 1, 2, 3, 4, 5 của tháng
+    const weekNum = Math.ceil((day+startIndex)/7);
+
+    events.forEach(ev=>{
+        if(ev.weekly){
+            // Chuyển weekday của JS (0-6) về format của user (1-7, 0=CN thì thành 7)
+            const standardWeekday = weekday === 0 ? 7 : weekday;
+
+            if(ev.weekday === standardWeekday && ev.weeks.includes(weekNum)){
+                createNote(ev, cell);
+            }
+        } else if(ev.day === day){
+            createNote(ev, cell);
         }
-        
-        div.onclick = () => showPopup(text, cls);
-        
-        // Bọc text trong một <span> để kiểm soát ngắt dòng
-        const textSpan = document.createElement("span");
-        textSpan.textContent = text;
-        
-        div.appendChild(textSpan);
-        
-        cell.appendChild(div);
-    };
-
-    if (d===7) add("Mahado Nexus 1103","nexus");
-    if (d===21) add("Mahado Edison","edison");
-    if (d===9) add("TNT Genesys","tnt genesys", true);
-    if (d===13) add("Mahado Open AE","ae");
-    if (d===14) add("Mahado Genesys","genesys");
-    if (d===27) add("Mahado HoF Kickoff","hof");
-    if (d===28) add("Anh Bình Tournament","tour");
-
-    const weekday = new Date(year,month,d).getDay();
-    const weekNum = Math.ceil((d+startIndex)/7);
-
-    if (weekday===2 && (weekNum===1 || weekNum===3 || weekNum===4 || weekNum===5)) 
-        add("TNT OCG","ocg", true);
-
-    if (weekday===6 && (weekNum===1 || weekNum===3)) 
-        add("Mahado OCG Open","ocg");
+    });
 }
 
-/* Popup */
-function showPopup(text, cls){
+/* ———————————————— CREATE NOTE ELEMENT ———————————————— */
+function createNote(ev, cell){
+    const box = document.createElement("div");
+    box.className = `note ${ev.type}`;
+
+    // Stream icon (camera) if stream = true
+    if(ev.stream){
+        const cam = document.createElement("span");
+        cam.className = "stream-icon";
+        cam.textContent = "📺";
+        box.appendChild(cam);
+    }
+
+    // Name only (no parentheses)
+    const name = document.createElement("span");
+    name.textContent = ev.name;
+    box.appendChild(name);
+
+    // Type icon according to custom table (badge on right)
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = TYPE_ICONS[ev.type] || ev.type.toUpperCase();
+    box.appendChild(tag);
+
+    box.onclick = ()=> showPopup(ev);
+    cell.appendChild(box);
+}
+
+/* ———————————————— POPUP ———————————————— */
+function showPopup(ev){
     popupArea.innerHTML = `
-    <div class='popup-bg' onclick='closePopup()'>
-        <div class='popup' onclick='event.stopPropagation()'>
-            <h3>${text}</h3>
-            <p>Loại: <b>${cls.toUpperCase()}</b></p>
-            <button onclick='closePopup()'>Đóng</button>
+    <div class="popup-bg" onclick="closePopup()">
+        <div class="popup" onclick="event.stopPropagation()">
+            <h3>${ev.name}</h3>
+            <p>Loại: <b>${ev.type.toUpperCase()}</b></p>
+            <p>Stream: ${ev.stream ? "Có" : "Không"}</p>
+            <button onclick="closePopup()">Đóng</button>
         </div>
     </div>`;
 }
+function closePopup(){ popupArea.innerHTML = ""; }
 
-function closePopup(){ popupArea.innerHTML=""; }
-
-/* Filter */
-document.querySelectorAll(".filter").forEach(chk => {
+/* ———————————————— FILTER ———————————————— */
+document.querySelector(".filter-stream")?.addEventListener("change", applyFilter);
+document.querySelector(".filter-stream-no")?.addEventListener("change", applyFilter);
+document.querySelectorAll(".filter").forEach(chk=>{
     chk.addEventListener("change", applyFilter);
 });
+// attach stream checkbox to trigger same applyFilter
+const streamCheckbox = document.querySelector(".filter-stream");
+if(streamCheckbox) streamCheckbox.addEventListener("change", applyFilter);
 
-//Filler
-/* Filter */
-document.querySelectorAll(".filter").forEach(chk => {
-    chk.addEventListener("change", applyFilter);
-});
 
+// main applyFilter: combines type filters + stream filter
 function applyFilter() {
 
-    // 1. Bật/tắt từng loại note
-    document.querySelectorAll(".filter").forEach(chk => {
-        const type = chk.value;
-        const visible = chk.checked;
-
-        document.querySelectorAll(".note." + type).forEach(note => {
-            note.style.display = visible ? "flex" : "none";
-        });
+    // Lấy trạng thái filter loại giải
+    const selectedTypes = {};
+    document.querySelectorAll(".filter").forEach(chk=>{
+        selectedTypes[chk.value] = chk.checked;
     });
 
-    // 2. CHỈ ẨN CẢ Ô DAY TRÊN MOBILE
-        if (window.innerWidth <= 768) {
-            // 1. Lọc theo từng loại event
-        document.querySelectorAll(".filter").forEach(chk => {
-            const type = chk.value;
-            const visible = chk.checked;
-            document.querySelectorAll(".note." + type).forEach(note => {
-                note.style.display = visible ? "flex" : "none";
-            });
-        });
+    // Lấy trạng thái filter stream mới
+    const showStream = document.querySelector(".filter-stream").checked;
+    const showNoStream = document.querySelector(".filter-stream-no").checked;
 
-        // 2. Ẩn cả ô ngày nếu không còn event nào hiển thị
-        document.querySelectorAll(".day").forEach(day => {
-            const hasVisibleEvent =
-                [...day.querySelectorAll(".note, .hof")]
-                    .some(n => n.style.display !== "none");
+    const isMobile = window.innerWidth <= 768;
 
-            day.style.display = hasVisibleEvent ? "flex" : "none";
-        });
-    }
-}
-
-
-/* Ẩn ngày không có event trên mobile */
-if (window.innerWidth <= 768) {
     document.querySelectorAll(".day").forEach(day => {
-        const hasEvent = day.querySelector(".note, .hof");
-        if (!hasEvent) {
-            day.style.display = "none";
+        const notes = [...day.querySelectorAll(".note")];
+        let visibleCount = 0;
+
+        notes.forEach(n => {
+            const nType = [...n.classList].find(c => KNOWN_TYPES.includes(c));
+            const hasStream = !!n.querySelector(".stream-icon");
+
+            let visible = true;
+
+            // 1) Lọc theo loại
+            if(nType) visible = selectedTypes[nType];
+
+            // 2) Lọc theo Stream mới
+            if(hasStream && !showStream) visible = false;
+            if(!hasStream && !showNoStream) visible = false;
+
+            // Display
+            n.style.display = visible ? "flex" : "none";
+            if(visible) visibleCount++;
+        });
+
+        // Mobile ẩn ngày không có sự kiện
+        if(isMobile){
+            day.style.display = visibleCount > 0 ? "flex" : "none";
+        } else {
+            day.style.display = "";
         }
     });
 }
 
-let lastMode = window.innerWidth <= 768 ? "mobile" : "desktop";
+/* ———————————————— AUTO FILTER ON LOAD & RESIZE ———————————————— */
 
+// 1. Chạy bộ lọc khi tải trang (đặc biệt cho mobile)
+applyFilter();
+
+// 2. Xử lý thay đổi kích thước màn hình mà KHÔNG reload trang
 window.addEventListener("resize", () => {
-    const currentMode = window.innerWidth <= 768 ? "mobile" : "desktop";
-
-    // Nếu đổi trạng thái mobile <-> desktop thì reload toàn trang
-    if (currentMode !== lastMode) {
-        location.reload();
-    }
-
-    lastMode = currentMode;
+    // Sử dụng Debounce để giới hạn số lần gọi applyFilter khi kéo chuột liên tục
+    if(window.resizeTimer) clearTimeout(window.resizeTimer);
+    window.resizeTimer = setTimeout(() => {
+        applyFilter();
+    }, 200);
 });
-
-
 </script>
 </body>
 </html>

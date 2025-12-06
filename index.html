@@ -287,10 +287,17 @@ body {
 }
 
 @media (max-width: 768px) {
+    /* Ẩn mọi ô trong tháng nếu không có note */
+    td:not(:has(.note)):not(:has(.hof)) {
+        display: none !important;
+    }
+
+    /* Ẩn ô của tháng khác (nếu còn) */
     .other {
         display: none !important;
     }
 }
+
 
 /* 🔴 Icon TV cho sự kiện có Stream (Class: has-stream) */
 .note.has-stream {
@@ -480,14 +487,75 @@ function showPopup(text, cls){
 function closePopup(){ popupArea.innerHTML=""; }
 
 /* Filter */
-document.querySelectorAll(".filter").forEach(chk=>{
-    chk.addEventListener("change",()=>{
+document.querySelectorAll(".filter").forEach(chk => {
+    chk.addEventListener("change", applyFilter);
+});
+
+//Filler
+/* Filter */
+document.querySelectorAll(".filter").forEach(chk => {
+    chk.addEventListener("change", applyFilter);
+});
+
+function applyFilter() {
+
+    // 1. Bật/tắt từng loại note
+    document.querySelectorAll(".filter").forEach(chk => {
         const type = chk.value;
         const visible = chk.checked;
-        document.querySelectorAll(".note."+type)
-        .forEach(n=>n.style.display = visible ? "flex":"none");
+
+        document.querySelectorAll(".note." + type).forEach(note => {
+            note.style.display = visible ? "flex" : "none";
+        });
     });
+
+    // 2. CHỈ ẨN CẢ Ô DAY TRÊN MOBILE
+        if (window.innerWidth <= 768) {
+            // 1. Lọc theo từng loại event
+        document.querySelectorAll(".filter").forEach(chk => {
+            const type = chk.value;
+            const visible = chk.checked;
+            document.querySelectorAll(".note." + type).forEach(note => {
+                note.style.display = visible ? "flex" : "none";
+            });
+        });
+
+        // 2. Ẩn cả ô ngày nếu không còn event nào hiển thị
+        document.querySelectorAll(".day").forEach(day => {
+            const hasVisibleEvent =
+                [...day.querySelectorAll(".note, .hof")]
+                    .some(n => n.style.display !== "none");
+
+            day.style.display = hasVisibleEvent ? "flex" : "none";
+        });
+    }
+}
+
+
+/* Ẩn ngày không có event trên mobile */
+if (window.innerWidth <= 768) {
+    document.querySelectorAll(".day").forEach(day => {
+        const hasEvent = day.querySelector(".note, .hof");
+        if (!hasEvent) {
+            day.style.display = "none";
+        }
+    });
+}
+
+let lastMode = window.innerWidth <= 768 ? "mobile" : "desktop";
+
+window.addEventListener("resize", () => {
+    const currentMode = window.innerWidth <= 768 ? "mobile" : "desktop";
+
+    // Nếu đổi trạng thái mobile <-> desktop thì reload toàn trang
+    if (currentMode !== lastMode) {
+        location.reload();
+    }
+
+    lastMode = currentMode;
 });
+
+
 </script>
 </body>
 </html>

@@ -129,7 +129,7 @@ body {
 }
 
 .past {
-    opacity: 0.6 !important;
+    opacity: 0.8 !important;
     background: rgba(134, 134, 134, 0.7) !important;
     color: white !important;
     text-decoration: line-through;
@@ -354,6 +354,8 @@ body {
 .popup-row .value .tag { font-size: .85em; padding: 3px 6px; }
 .watch-btn { display:inline-block; margin-left:8px; padding:4px 8px; border-radius:6px; background:#1976d2; color:white; text-decoration:none; font-weight:700; font-size:.9em; }
 .watch-btn[disabled]{ opacity: .5; pointer-events: none; }
+.prize-btn { display:inline-block; margin-left:8px; padding:4px 8px; border-radius:6px; background:#388e3c; color:white; text-decoration:none; font-weight:700; font-size:.9em; }
+.prize-btn[disabled]{ opacity: .5; pointer-events: none; }
 
 @keyframes fade { from{opacity:0; transform:translateY(10px)} to{opacity:1;} }
 
@@ -373,7 +375,7 @@ body {
 .page {
     position: relative;
     width: 100%;
-    height: 180px;
+    min-height: 120px;
     margin-bottom: 15px;
     transform-style: preserve-3d;
     transition: opacity 160ms ease;
@@ -386,20 +388,22 @@ body {
 
 .page .front, 
 .page .back {
-    position: absolute;
+    position: relative;
     width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 12px;
-    padding: 16px;
+    height: auto;
+    backface-visibility: visible;
+    border-radius: 10px;
+    padding: 14px;
     box-sizing: border-box;
-    background: #fafafa;
-    border: 1px solid #ddd;
+    background: #ffffff;
+    border: 1px solid #e6e6e6;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
 }
 
 .page .back {
-    transform: rotateY(180deg);
-    background: #eaeaea;
+    /* slightly muted background for back pages */
+    background: #fafafa;
+    transform: none;
 }
 
 .close-book {
@@ -622,13 +626,13 @@ const TYPE_ICONS = {
     hof: "HOF"
 };
 
-// events: each item can have optional `stream` (boolean) and `streamUrl` (string) to show a watch link in the popup
+// events: each item can have optional `stream` (boolean), `streamUrl` (string) and `prizeUrl` (string) to show watch/prize links in the popup
 const events = [
     { day:7, name:"Mahado Nexus", type:"nexus", stream:false, time:"14:30", finished: true },
     { day:21, name:"Mahado Edison", type:"edison", stream:false, time:"14:30", finished: true },
     { day:9, name:"TNT Genesys", type:"genesys", stream:false, time:"14:30", finished: true },
     { day:14, name:"Mahado AE Open", type:"ae", stream:false, time:"10:00 "},
-    { day:27, name:"Mahado HoF Kickoff", type:"hof", stream:true, time:"13:00", streamUrl: "https://example.com/watch" },
+    { day:27, name:"Mahado HoF Kickoff", type:"hof", stream:true, time:"13:00", streamUrl: "https://example.com/watch", prizeUrl: "https://example.com/prize"},
     { day:28, name:"Anh Bình Tournament", type:"tour", stream:false, time:"14:30" },
 
     /* Converted weekly TNT OCG (Tuesdays) -> explicit day entries */
@@ -808,10 +812,8 @@ function showPopup(ev, e){
                         <div class="popup-row"><span class="label">Thời gian</span><span class="value"><b>${ev.time || 'TBA'}</b></span></div>
                         <div class="popup-row"><span class="label">Trạng thái</span><span class="value" id="popup-status"><b>${status.label}</b></span></div>
                         <div class="popup-row"><span class="label">Format</span><span class="value"><span class="tag ${ev.type}">${TYPE_ICONS[ev.type] || ev.type.toUpperCase()}</span></span></div>
-                        <div class="popup-row"><span class="label">Stream</span><span class="value">${ev.stream ? '📺 Có stream' : '🚫 Không stream'}${ev.streamUrl ? ` <a class="watch-btn" href="${ev.streamUrl}" target="_blank" rel="noopener">Xem</a>` : ''}</span></div>
-                    </div>
-                    <div class="back">
-                        Format: <b>${ev.type.toUpperCase()}</b>
+                        <div class="popup-row"><span class="label">Stream</span><span class="value">${ev.stream ? '📺 Có stream' : '🚫 Không stream'}${ev.streamUrl ? ' <a class="watch-btn" href="' + ev.streamUrl + '" target="_blank" rel="noopener">Xem</a>' : ''}</span></div>
+                        <div class="popup-row"><span class="label">Phần thưởng</span><span class="value">${ev.prizeUrl ? '<a class="prize-btn" href="' + ev.prizeUrl + '" target="_blank" rel="noopener">Xem phần thưởng</a>' : 'Đang cập nhật'}</span></div>
                     </div>
                 </div>`;
 

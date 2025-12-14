@@ -27,6 +27,14 @@
     --bg-edison: #fff3e0;
     --bg-tour: #f3e5f5;
     --bg-hof: #ffecec;
+    /* Status colors */
+    --status-not-started: #0d47a1;
+    --status-ongoing: #1b5e20;
+    --status-finished: #b71c1c;
+    /* RGBA overlays for background tint based on status */
+    --status-not-started-rgba: rgba(13,71,161,0.06);
+    --status-ongoing-rgba: rgba(27,94,32,0.08);
+    --status-finished-rgba: rgba(183,28,28,0.06);
 }
 
 /* ———————————————— GENERAL BACKGROUND ———————————————— */
@@ -183,9 +191,12 @@ body {
 .note:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,.18); }
 
 /* make the event name take remaining space so tag pushes to right */
-.note > span:first-child {
+.note .name {
     display: inline-block;
     line-height: 1.15;
+    flex: 1 1 auto; /* allow the name to grow and wrap */
+    min-width: 0; /* prevent overflow when long */
+    overflow-wrap: break-word;
 }
 
 /* TAG (badge) styling: white background, colored border and text from type */
@@ -209,6 +220,8 @@ body {
     }
 }
 
+/* NOTE: time is displayed only in preview and popup, not in the note. */
+
 /* make stream icon sit left and not affect flex */
 .stream-icon {
     font-size: 1.05em;
@@ -218,52 +231,190 @@ body {
 }
 
 /* COLORS BY TYPE (sử dụng biến CSS) */
-.ocg { background:var(--bg-ocg); border-left:5px solid var(--color-ocg); color:var(--color-ocg); }
+.ocg { background:var(--bg-ocg); color:var(--color-ocg); border-left:5px solid var(--color-ocg); }
 .ocg .tag { border-color: var(--color-ocg); color: var(--color-ocg); }
 
-.ae { background:var(--bg-ae); border-left:5px solid var(--color-ae); color:var(--color-ae); }
+.ae { background:var(--bg-ae); color:var(--color-ae); border-left:5px solid var(--color-ae); }
 .ae .tag { border-color: var(--color-ae); color: var(--color-ae); }
 
-.tnt { background:var(--bg-tnt); border-left:5px solid var(--color-tnt); color:var(--color-tnt); }
+.tnt { background:var(--bg-tnt); color:var(--color-tnt); border-left:5px solid var(--color-tnt); }
 .tnt .tag { border-color: var(--color-tnt); color: var(--color-tnt); }
 
-.genesys { background:var(--bg-genesys); border-left:5px solid var(--color-genesys); color:var(--color-genesys); }
+.genesys { background:var(--bg-genesys); color:var(--color-genesys); border-left:5px solid var(--color-genesys); }
 .genesys .tag { border-color: var(--color-genesys); color: var(--color-genesys); }
 
-.nexus { background:var(--bg-nexus); border-left:5px solid var(--color-nexus); color:var(--color-nexus); }
+.nexus { background:var(--bg-nexus); color:var(--color-nexus); border-left:5px solid var(--color-nexus); }
 .nexus .tag { border-color: var(--color-nexus); color: var(--color-nexus); }
 
-.edison { background:var(--bg-edison); border-left:5px solid var(--color-edison); color:var(--color-edison); }
+.edison { background:var(--bg-edison); color:var(--color-edison); border-left:5px solid var(--color-edison); }
 .edison .tag { border-color: var(--color-edison); color: var(--color-edison); }
 
-.tour { background:var(--bg-tour); border-left:5px solid var(--color-tour); color:var(--color-tour); }
+.tour { background:var(--bg-tour); color:var(--color-tour); border-left:5px solid var(--color-tour); }
 .tour .tag { border-color: var(--color-tour); color: var(--color-tour); }
 
 .hof {
     background:var(--bg-hof);
-    border-left:5px solid var(--color-hof);
     animation:pulse 1.3s infinite;
     color: var(--color-hof);
+    border-left: 5px solid var(--color-hof);
 }
 .hof .tag { border-color: var(--color-hof); color: var(--color-hof); }
 
 @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.03)} 100%{transform:scale(1)} }
 
+/* ——— PREVIEW ON HOVER ——— */
+.preview-box {
+    position: fixed;
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    max-width: 240px;
+    line-height: 1.4;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: .15s ease;
+    box-shadow: 0 6px 14px rgba(0,0,0,.45);
+}
+.preview-box.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Gallery inside popup */
+.gallery {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 6px 4px;
+}
+.gallery img {
+    max-height: 150px;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.gallery .empty {
+    color: #666;
+    font-size: 0.95em;
+}
+
 /* ———————————————— POPUP ———————————————— */
 .popup-bg {
     position:fixed; inset:0;
-    background:rgba(0,0,0,.65);
+    background:rgba(0,0,0,0.65);
     display:flex; justify-content:center; align-items:center;
     z-index:20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease;
 }
+.popup-bg.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Generic popup (kept for backward compatibility) */
 .popup {
     background:white;
     padding:20px;
     border-radius:12px;
     width:300px;
-    animation:fade .2s ease;
 }
+
+/* Book-style popup transitions */
+.book-popup {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    width: 340px;
+    perspective: 1000px;
+    transform: translateY(8px) scale(0.98);
+    opacity: 0;
+    transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 180ms ease;
+}
+.book-popup.show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* Popup content rows */
+.popup-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0;
+    font-size: 0.98em;
+}
+.popup-row .label { color: #666; font-weight: 700; }
+.popup-row .value { color: #222; font-weight: 600; }
+.popup-row .value .tag { font-size: .85em; padding: 3px 6px; }
+.watch-btn { display:inline-block; margin-left:8px; padding:4px 8px; border-radius:6px; background:#1976d2; color:white; text-decoration:none; font-weight:700; font-size:.9em; }
+.watch-btn[disabled]{ opacity: .5; pointer-events: none; }
+
 @keyframes fade { from{opacity:0; transform:translateY(10px)} to{opacity:1;} }
+
+/* ————————— BOOK STYLE POPUP ————————— */
+.book-popup {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    width: 340px;
+    perspective: 1000px;
+}
+
+.book {
+    position: relative;
+}
+
+.page {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    margin-bottom: 15px;
+    transform-style: preserve-3d;
+    transition: opacity 160ms ease;
+    cursor: default;
+}
+
+
+.page { display: none; }
+.page.active { display: block; }
+
+.page .front, 
+.page .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    padding: 16px;
+    box-sizing: border-box;
+    background: #fafafa;
+    border: 1px solid #ddd;
+}
+
+.page .back {
+    transform: rotateY(180deg);
+    background: #eaeaea;
+}
+
+.close-book {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.close-book button {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #333;
+    color: white;
+    cursor: pointer;
+}
 
 /* ———————————————— FILTER ———————————————— */
 .filter-box {
@@ -311,6 +462,34 @@ body {
     transform: translateY(-2px);
 }
 
+.filter-item {
+    position: relative;
+}
+
+.filter-item::after {
+    content: attr(data-type);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.9);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    font-weight: 600;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 100;
+    margin-bottom: 8px;
+}
+
+.filter-item:hover::after {
+    opacity: 1;
+}
+
 .filter-item input {
     transform: scale(1.1);
 }
@@ -337,6 +516,19 @@ body {
     .day-number{ font-size:1.1em !important; margin-bottom: 4px; }
 }
 
+
+
+/* ————————— STATUS ————————— */
+/* Status indicates the *color/tint* of the note, while the left border is
+    owned by the event TYPE. We apply a subtle tinted overlay on top of the
+    type background to indicate status (not-started / ongoing / finished). */
+.note.status-not-started { box-shadow: inset 0 0 0 9999px var(--status-not-started-rgba); }
+.note.status-ongoing { box-shadow: inset 0 0 0 9999px var(--status-ongoing-rgba), 0 6px 12px rgba(27,94,32,0.06); }
+.note.status-finished { box-shadow: inset 0 0 0 9999px var(--status-finished-rgba); opacity: 0.65; filter: grayscale(0.05); }
+
+/* visual note state */
+.note.status-not-started { opacity: 1; }
+
 </style>
 </head>
 
@@ -350,11 +542,11 @@ body {
 
     <div class="filter-group">
         <div class="filter-title">Stream</div>
-        <label class="filter-item stream-filter">
+        <label class="filter-item stream-filter" data-type="Có stream">
             <input type="checkbox" class="filter-stream" checked>
             <span class="stream-icon-big">📺</span>
         </label>
-        <label class="filter-item">
+        <label class="filter-item" data-type="Không stream">
             <input type="checkbox" class="filter-stream-no" checked>
             <span class="stream-icon-big">🚫</span>
         </label>
@@ -414,6 +606,7 @@ body {
 
 <div class="calendar" id="calendar"></div>
 <div id="popup-area"></div>
+<div id="preview" class="preview-box"></div>
 
 <script>
 /* ——————————————————————————— EVENT DATA ——————————————————————————— */
@@ -429,20 +622,25 @@ const TYPE_ICONS = {
     hof: "HOF"
 };
 
+// events: each item can have optional `stream` (boolean) and `streamUrl` (string) to show a watch link in the popup
 const events = [
-    { day:7, name:"Mahado Nexus", type:"nexus", stream:false },
-    { day:21, name:"Mahado Edison", type:"edison", stream:false },
-    { day:9, name:"TNT Genesys", type:"genesys", stream:false },
-    { day:13, name:"Mahado AE Open", type:"ae", stream:false },
-    { day:14, name:"Mahado Genesys", type:"genesys", stream:false },
-    { day:27, name:"Mahado HoF Kickoff", type:"hof", stream:true },
-    { day:28, name:"Anh Bình Tournament", type:"tour", stream:false },
+    { day:7, name:"Mahado Nexus", type:"nexus", stream:false, time:"14:30", finished: true },
+    { day:21, name:"Mahado Edison", type:"edison", stream:false, time:"14:30", finished: true },
+    { day:9, name:"TNT Genesys", type:"genesys", stream:false, time:"14:30", finished: true },
+    { day:14, name:"Mahado AE Open", type:"ae", stream:false, time:"10:00 "},
+    { day:27, name:"Mahado HoF Kickoff", type:"hof", stream:true, time:"13:00", streamUrl: "https://example.com/watch" },
+    { day:28, name:"Anh Bình Tournament", type:"tour", stream:false, time:"14:30" },
 
-    /* WEEKLY TNT OCG TUESDAY */
-    { weekly:true, weekday:2, weeks:[1,3,4,5], name:"TNT OCG", type:"ocg", stream:true },
+    /* Converted weekly TNT OCG (Tuesdays) -> explicit day entries */
+    { day:2, name:"TNT OCG", type:"ocg", stream:true, time:"18:00", finished: true, streamUrl: "https://www.youtube.com/watch?v=VZYrdL0S7Ds" },
+    { day:16, name:"TNT OCG", type:"ocg", stream:true, time:"18:00" },
+    { day:23, name:"TNT OCG", type:"ocg", stream:true, time:"18:00" },
+    { day:30, name:"TNT OCG", type:"ocg", stream:true, time:"18:00" },
 
-    /* WEEKLY OCG OPEN SATURDAY */
-    { weekly:true, weekday:6, weeks:[1,3], name:"Mahado OCG Open", type:"ocg", stream:false }
+    /* Converted weekly OCG Open (Saturdays) -> explicit day entries */
+    { day:6, name:"Mahado OCG Open", type:"ocg", stream:false, time:"14:00", finished: true },
+    { day:13, name:"Mahado OCG Open", type:"ocg", stream:false, time:"14:00", finished: true },
+    { day:20, name:"Mahado OCG Open", type:"ocg", stream:false, time:"14:00" }
 ];
 
 /* ——————————————————————————— BUILDING THE CALENDAR ——————————————————————————— */
@@ -456,6 +654,10 @@ today.setHours(0,0,0,0);
 // Thiết lập tháng và năm cho lịch (Hiện tại là Tháng 12)
 const year = today.getFullYear();
 const month = 11; // 0 = Jan, 11 = Dec
+
+// Image configuration (change these if you move image folders)
+const IMAGE_ROOT = '/data/image';
+const IMAGE_MONTH = 'Dec';
 
 const firstDay = new Date(year, month, 1).getDay(); // 0=CN, 1=T2, ...
 const daysInMonth = new Date(year, month+1, 0).getDate();
@@ -500,11 +702,11 @@ cells.forEach((cell,i)=>{
     if(isPast) cell.classList.add("past");
     if(isToday) cell.classList.add("today");
 
-    addEventsToCell(d, cell);
+    addEventsToCell(d, cell, date);
 });
 
 /* ———————————————— RENDER EVENTS ———————————————— */
-function addEventsToCell(day, cell){
+function addEventsToCell(day, cell, date){
     // DayOfWeek: 0=CN, 1=T2, ... 6=T7
     const weekday = new Date(year,month,day).getDay(); 
     // Week Number: tuần 1, 2, 3, 4, 5 của tháng
@@ -516,16 +718,16 @@ function addEventsToCell(day, cell){
             const standardWeekday = weekday === 0 ? 7 : weekday;
 
             if(ev.weekday === standardWeekday && ev.weeks.includes(weekNum)){
-                createNote(ev, cell);
+                createNote(ev, cell, date);
             }
         } else if(ev.day === day){
-            createNote(ev, cell);
+            createNote(ev, cell, date);
         }
     });
 }
 
 /* ———————————————— CREATE NOTE ELEMENT ———————————————— */
-function createNote(ev, cell){
+function createNote(ev, cell, date){
     const box = document.createElement("div");
     box.className = `note ${ev.type}`;
 
@@ -537,8 +739,11 @@ function createNote(ev, cell){
         box.appendChild(cam);
     }
 
+    // Optional start time is shown only in popup / preview (not in the note UI)
+
     // Name only (no parentheses)
     const name = document.createElement("span");
+    name.className = 'name';
     name.textContent = ev.name;
     box.appendChild(name);
 
@@ -548,23 +753,226 @@ function createNote(ev, cell){
     tag.textContent = TYPE_ICONS[ev.type] || ev.type.toUpperCase();
     box.appendChild(tag);
 
-    box.onclick = ()=> showPopup(ev);
+    box.onclick = (e) => showPopup(ev, e);
+    box.onmouseover = (e) => showPreview(ev, e);
+    box.onmousemove = movePreview;
+    box.onmouseleave = hidePreview;
+
+    // compute start timestamp if time is provided
+    let startMs = 0;
+    if(ev.time && date){
+        const [hh, mm] = ev.time.split(':').map(s => Number(s));
+        const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hh || 0, mm || 0);
+        startMs = startDate.getTime();
+        box.dataset.start = String(startMs);
+    } else if(date){
+        // use start of day (midnight) if no time specified
+        const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+        startMs = startDate.getTime();
+        box.dataset.start = String(startMs);
+    }
+
+    // compute and store status-related data attributes
+    // default finished to false if not provided; allow localStorage overrides
+    const key = getFinishKey(ev, startMs);
+    let finished = !!ev.finished;
+    try{ const persisted = localStorage.getItem(key); if(persisted !== null) finished = persisted === 'true'; }catch(e){ }
+    box.dataset.finished = finished ? 'true' : 'false';
+
+    // compute and set status class only; we don't add textual badges to notes.
+    const status = computeEventStatus(startMs, finished);
+    // set the status class on the note (affects border and visual state)
+    box.classList.add(status.class);
+    // accessibility: expose aria label with status and make the note keyboard-focusable
+    box.setAttribute('aria-label', `${ev.name} — ${status.label}`);
+    box.tabIndex = 0;
+    box.onkeydown = (evKey) => { if(evKey.key === 'Enter' || evKey.key === ' ') showPopup(ev, { currentTarget: box, clientX: box.getBoundingClientRect().left + 10, clientY: box.getBoundingClientRect().top + 10 }); };
+    // No textual badge appended - notes will indicate status via color/border.
     cell.appendChild(box);
 }
 
 /* ———————————————— POPUP ———————————————— */
-function showPopup(ev){
+function showPopup(ev, e){
+    // Render popup HTML
+    // compute status using the clicked element dataset if available; fall back to event data
+    const startMs = Number(e?.currentTarget?.dataset?.start || 0);
+    const persistedFinished = e?.currentTarget?.dataset?.finished === 'true';
+    const finished = persistedFinished || !!ev.finished;
+    const status = computeEventStatus(startMs, finished);
+
+    // Render only the first page when not finished; include extra pages when finished
+    const firstPage = `
+                <div class="page" data-index="0">
+                    <div class="front">
+                        <h3>${ev.name}</h3>
+                        <div class="popup-row"><span class="label">Thời gian</span><span class="value"><b>${ev.time || 'TBA'}</b></span></div>
+                        <div class="popup-row"><span class="label">Trạng thái</span><span class="value" id="popup-status"><b>${status.label}</b></span></div>
+                        <div class="popup-row"><span class="label">Format</span><span class="value"><span class="tag ${ev.type}">${TYPE_ICONS[ev.type] || ev.type.toUpperCase()}</span></span></div>
+                        <div class="popup-row"><span class="label">Stream</span><span class="value">${ev.stream ? '📺 Có stream' : '🚫 Không stream'}${ev.streamUrl ? ` <a class="watch-btn" href="${ev.streamUrl}" target="_blank" rel="noopener">Xem</a>` : ''}</span></div>
+                    </div>
+                    <div class="back">
+                        Format: <b>${ev.type.toUpperCase()}</b>
+                    </div>
+                </div>`;
+
+    const extraPages = `
+                <div class="page" data-gallery="true">
+                    <div class="front">
+                        <h4>Hình ảnh</h4>
+                        <div class="gallery" aria-live="polite">Tải ảnh...</div>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <div class="front">Thông tin thêm</div>
+                    <div class="back">
+                        Event ngày: ${ev.day ? ev.day : "Hàng tuần"}
+                    </div>
+                </div>`;
+
     popupArea.innerHTML = `
     <div class="popup-bg" onclick="closePopup()">
-        <div class="popup" onclick="event.stopPropagation()">
-            <h3>${ev.name}</h3>
-            <p>Loại: <b>${ev.type.toUpperCase()}</b></p>
-            <p>Stream: ${ev.stream ? "Có" : "Không"}</p>
-            <button onclick="closePopup()">Đóng</button>
+        <div class="book-popup" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+
+            <div class="book">
+                <div class="page-view" role="group" aria-label="Popup pages">
+                    ${firstPage}
+                    ${finished ? extraPages : ''}
+                </div>
+            </div>
+
+            <div class="close-book">
+                <button id="popup-prev" aria-label="Trang trước">‹</button>
+                <button id="popup-next" aria-label="Trang sau">›</button>
+                <button id="popup-close-btn">Đóng</button>
+            </div>
+
         </div>
     </div>`;
+
+    // Prevent background scroll
+    document.body.style.overflow = 'hidden';
+
+    // Add keyboard handler for Escape
+    const onKey = (e) => { if(e.key === 'Escape') closePopup(); };
+    document.addEventListener('keydown', onKey);
+    // store handler so we can remove it later
+    popupArea._onKey = onKey;
+
+    // Animate in by adding .show classes after render
+    const popupBg = popupArea.querySelector('.popup-bg');
+    const bookPopup = popupArea.querySelector('.book-popup');
+    requestAnimationFrame(()=>{
+        popupBg && popupBg.classList.add('show');
+        bookPopup && bookPopup.classList.add('show');
+    });
+
+    // Attach close button
+    const closeBtn = popupArea.querySelector('#popup-close-btn');
+    closeBtn?.addEventListener('click', closePopup);
+
+    // Setup page navigation (prev/next buttons)
+    (function setupNavigation(){
+        const pageView = popupArea.querySelector('.page-view');
+        if(!pageView) return;
+        const pages = Array.from(pageView.querySelectorAll('.page'));
+        // mark first as active
+        pages.forEach((p, idx) => p.classList.toggle('active', idx === 0));
+
+        const prevBtn = popupArea.querySelector('#popup-prev');
+        const nextBtn = popupArea.querySelector('#popup-next');
+
+        let current = 0;
+        function showIndex(i){
+            if(i < 0) i = 0;
+            if(i > pages.length - 1) i = pages.length - 1;
+            current = i;
+            pages.forEach((p, idx) => p.classList.toggle('active', idx === current));
+            if(prevBtn) prevBtn.disabled = current === 0;
+            if(nextBtn) nextBtn.disabled = current === pages.length - 1;
+        }
+
+        if(prevBtn) prevBtn.addEventListener('click', ()=> showIndex(current - 1));
+        if(nextBtn) nextBtn.addEventListener('click', ()=> showIndex(current + 1));
+
+        // hide navigation if only one page
+        if(pages.length <= 1){
+            prevBtn && (prevBtn.style.display = 'none');
+            nextBtn && (nextBtn.style.display = 'none');
+        } else {
+            // keyboard navigation (left/right)
+            const onNavKey = (evt) => {
+                if(evt.key === 'ArrowLeft') showIndex(current - 1);
+                if(evt.key === 'ArrowRight') showIndex(current + 1);
+            };
+            document.addEventListener('keydown', onNavKey);
+            popupArea._onNavKey = onNavKey;
+            // initialize buttons state
+            showIndex(0);
+        }
+    })();
+
+    // initialize gallery if present: fetch images for this event's day
+    (async function initGallery(){
+        const galleryPage = popupArea.querySelector('.page[data-gallery="true"]');
+        if(!galleryPage) return;
+        const galleryEl = galleryPage.querySelector('.gallery');
+        if(!galleryEl) return;
+
+        const day = ev.day;
+        if(!day){
+            galleryEl.innerHTML = '<div class="empty">Không có thư mục ảnh cho sự kiện này.</div>';
+            return;
+        }
+
+        try{
+            let imgs = await fetchImagesForDay(day);
+            if(!imgs || imgs.length === 0){
+                galleryEl.innerHTML = '<div class="empty">Không tìm thấy ảnh.</div>';
+                return;
+            }
+            // limit to reasonable number
+            imgs = imgs.slice(0,20);
+
+            galleryEl.innerHTML = '';
+            imgs.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = ev.name + ' - ảnh';
+                img.loading = 'lazy';
+                img.addEventListener('click', ()=> window.open(src, '_blank'));
+                galleryEl.appendChild(img);
+            });
+        } catch(err){
+            galleryEl.innerHTML = '<div class="empty">Lỗi khi tải ảnh.</div>';
+
+        }
+    })();
+
+    // No toggle button in the popup — finished state is managed in-code and via persistence.
 }
-function closePopup(){ popupArea.innerHTML = ""; }
+
+function closePopup(){
+    const popupBg = popupArea.querySelector('.popup-bg');
+    const bookPopup = popupArea.querySelector('.book-popup');
+
+    // Remove show classes to trigger hide animation
+    popupBg && popupBg.classList.remove('show');
+    bookPopup && bookPopup.classList.remove('show');
+
+    // Restore scroll and remove key handler
+    document.body.style.overflow = '';
+    if(popupArea._onKey) document.removeEventListener('keydown', popupArea._onKey);
+    popupArea._onKey = null;
+    if(popupArea._onNavKey) document.removeEventListener('keydown', popupArea._onNavKey);
+    popupArea._onNavKey = null;
+    // No toggle button cleanup required (finished state is managed in code).
+
+    // Wait for CSS transition to finish before removing DOM
+    setTimeout(()=>{ popupArea.innerHTML = ''; }, 260);
+}
+
+/* flipPage removed — navigation uses prev/next buttons now */
 
 /* ———————————————— FILTER ———————————————— */
 document.querySelector(".filter-stream")?.addEventListener("change", applyFilter);
@@ -572,6 +980,7 @@ document.querySelector(".filter-stream-no")?.addEventListener("change", applyFil
 document.querySelectorAll(".filter").forEach(chk=>{
     chk.addEventListener("change", applyFilter);
 });
+
 // attach stream checkbox to trigger same applyFilter
 const streamCheckbox = document.querySelector(".filter-stream");
 if(streamCheckbox) streamCheckbox.addEventListener("change", applyFilter);
@@ -623,10 +1032,148 @@ function applyFilter() {
     });
 }
 
+const previewBox = document.getElementById("preview");
+
+function showPreview(ev, e) {
+    const streamText = ev.stream ? "📺 Có stream" : "🚫 Không stream";
+    const typeName = ev.type.toUpperCase();
+
+    // compute status using the note's dataset (if available)
+    const startMs = Number(e.currentTarget?.dataset?.start || 0);
+    const finished = e.currentTarget?.dataset?.finished === 'true';
+    const status = computeEventStatus(startMs, finished);
+    previewBox.innerHTML = `
+        <b>${ev.name}</b><br>
+        Thời gian: ${ev.time || 'TBA'}<br>
+        Trạng thái: ${status.label}<br>
+        Format: <span class="tag ${ev.type}">${TYPE_ICONS[ev.type] || typeName}</span><br>
+        ${streamText}
+    `;
+
+    const x = e.clientX + 14;
+    const y = e.clientY + 14;
+
+    previewBox.style.left = x + "px";
+    previewBox.style.top = y + "px";
+
+    previewBox.classList.add("show");
+}
+
+function movePreview(e){
+    previewBox.style.left = (e.clientX + 14) + "px";
+    previewBox.style.top  = (e.clientY + 14) + "px";
+}
+
+function hidePreview(){
+    previewBox.classList.remove("show");
+}
+
+// ————— STATUS —————
+function computeEventStatus(startMs, finished){
+    const now = Date.now();
+    if(finished) return { label: 'Đã kết thúc', class: 'status-finished' };
+    if(!startMs) return { label: 'Chưa bắt đầu', class: 'status-not-started' };
+    if(now < startMs) return { label: 'Chưa bắt đầu', class: 'status-not-started' };
+    // started and not finished
+    return { label: 'Đang diễn ra', class: 'status-ongoing' };
+}
+
+// helper for persistence key per event occurrence
+function getFinishKey(ev, startMs){
+    // Use startMs + type + name for uniqueness
+    return `finished:${startMs}|${ev.type}|${encodeURIComponent(ev.name)}`;
+}
+
+function updateAllStatuses(){
+    document.querySelectorAll('.note').forEach(note => {
+        const startMs = Number(note.dataset.start || 0);
+        const finished = note.dataset.finished === 'true';
+        const status = computeEventStatus(startMs, finished);
+        // We no longer display textual status badges on notes.
+        // update note classes
+        note.classList.remove('status-not-started', 'status-ongoing', 'status-finished');
+        note.classList.add(status.class);
+        // update aria-label/title for accessibility
+        const nameEl = note.querySelector('.name');
+        const nameText = nameEl ? nameEl.textContent : '';
+        note.setAttribute('aria-label', `${nameText} — ${status.label}`);
+        note.title = `${nameText} — ${status.label}`;
+    })
+}
+
+// Try to discover images for a given day under `${IMAGE_ROOT}/${IMAGE_MONTH}/${day}`
+// Strategy (preferred):
+// 1) `index.json` file inside the folder containing a JSON array of filenames (fastest)
+// 2) Directory listing (if your server exposes autoindex)
+// 1) index.json
+async function fetchImagesForDay(day){
+    const base = `${IMAGE_ROOT}/${IMAGE_MONTH}/${day}/`;
+    // 1) index.json
+    try{
+        
+        const idx = await fetch(base + 'index.json');
+        if(idx.ok){
+            const arr = await idx.json();
+
+            if(Array.isArray(arr) && arr.length) return arr.map(s => {
+                if(s.startsWith('http')) return s;
+                if(s.startsWith('/')) return s;
+                return base + s.replace(/^\/?/, '');
+            });
+        } else {
+
+        }
+    } catch(e){ /* ignore */ }
+
+    // 2) try directory listing
+    try{
+        
+        const dir = await fetch(base);
+        if(dir.ok){
+            const text = await dir.text();
+            // look for hrefs
+            const urls = [];
+            const re = /href\s*=\s*\"([^\"]+\.(?:jpg|jpeg|png|webp|gif))\"/ig;
+            let m;
+            while((m = re.exec(text)) !== null){
+                let href = m[1];
+                // if href is relative, join with base
+                if(!href.startsWith('http')) href = base + href.replace(/^\/?/, '');
+                urls.push(href);
+            }
+
+            if(urls.length) return urls;
+        } else {
+
+        }
+    } catch(e){ /* ignore */ }
+
+    // 3) probe common numbered filenames
+    const exts = ['jpg','jpeg','png','webp','gif'];
+    const found = [];
+    for(let i=1;i<=20;i++){
+        for(const ext of exts){
+            const url = `${base}${i}.${ext}`;
+            try{
+                const res = await fetch(url, { method: 'HEAD' });
+                if(res.ok){ found.push(url); }
+            } catch(e){ /* ignore */ }
+        }
+        if(found.length >= 12) break; // don't probe forever
+    }
+
+    return found;
+}
+
+// Update statuses every 30s
+setInterval(updateAllStatuses, 30 * 1000);
+
 /* ———————————————— AUTO FILTER ON LOAD & RESIZE ———————————————— */
 
 // 1. Chạy bộ lọc khi tải trang (đặc biệt cho mobile)
 applyFilter();
+// 1.1 Update event statuses based on current time
+updateAllStatuses();
 
 // 2. Xử lý thay đổi kích thước màn hình mà KHÔNG reload trang
 window.addEventListener("resize", () => {
